@@ -11,6 +11,7 @@ document.getElementById('upload-btn').addEventListener('click', function() {
         // This function is called when the file is loaded
         var text = reader.result;
         names = text.split('\n'); // Assuming names are separated by new lines
+        names.sort(); // Sort the names in alphabetical order
 
         populateTable('name-table', names);
     };
