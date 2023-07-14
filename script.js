@@ -46,7 +46,7 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
 });
 
 document.getElementById('download-btn').addEventListener('click', function() {
-    var csv = orderedNames.join('\n');
+    var csv = orderedNames.map((name, i) => (i + 1) + '. ' + name).join('\n');
     var blob = new Blob([csv], {type: 'text/csv'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
