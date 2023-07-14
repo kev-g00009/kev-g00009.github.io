@@ -8,11 +8,9 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     var reader = new FileReader();
 
     reader.onload = function(e) {
-        // This function is called when the file is loaded
         var text = reader.result;
         names = text.split('\n'); // Assuming names are separated by new lines
         names.sort(); // Sort the names in alphabetical order
-
         populateTable('name-table', names);
     };
 
@@ -27,9 +25,7 @@ document.getElementById('go-btn').addEventListener('click', function() {
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var name = e.target.textContent;
-        // Remove the name from the original list
         names.splice(names.indexOf(name), 1);
-        // Add the name to the ordered list
         orderedNames.push(name);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
@@ -38,14 +34,11 @@ document.getElementById('name-table').addEventListener('click', function(e) {
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
-        var name = e.target.textContent;
-        var confirmation = confirm(`Are you sure you want to put back the name ${name}?`);
-        if (confirmation) {
-            // Remove the name from the ordered list
+        var name = e.target.textContent.split('. ')[1]; // Remove the number
+        if (window.confirm('Are you sure you want to put back the name ' + name + '?')) {
             orderedNames.splice(orderedNames.indexOf(name), 1);
-            // Add the name back to the original list
             names.push(name);
-            names.sort(); // Keep the names sorted
+            names.sort(); // Re-sort the names
             populateTable('name-table', names);
             populateTable('ordered-table', orderedNames, true);
         }
@@ -65,11 +58,9 @@ document.getElementById('download-btn').addEventListener('click', function() {
 
 function populateTable(tableId, namesArray, numbered=false) {
     var table = document.getElementById(tableId);
-    // Clear the table
     while (table.firstChild) {
         table.firstChild.remove();
     }
-    // Add each name to the table
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         var cell = document.createElement('td');
