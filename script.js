@@ -1,6 +1,7 @@
 var names;
 var orderedNames = [];
 var currentNumber = 1;
+var ordering = false;
 
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
@@ -12,22 +13,26 @@ document.getElementById('upload-btn').addEventListener('click', function() {
         var text = reader.result;
         names = text.split('\n'); // Assuming names are separated by new lines
 
-        populateList('name-list', names);
+        populateTable('name-table', names);
     };
 
     reader.readAsText(file); // This triggers the file reading
 });
 
 document.getElementById('go-btn').addEventListener('click', function() {
-    var nameList = document.getElementById('name-list');
-    if (nameList.firstChild) {
-        var name = nameList.firstChild.textContent;
+    ordering = !ordering; // Toggle the ordering state
+    document.getElementById('go-btn').textContent = ordering ? 'Stop' : 'Go';
+});
+
+document.getElementById('name-table').addEventListener('click', function(e) {
+    if (ordering && e.target && e.target.nodeName == "TD") {
+        var name = e.target.textContent;
         // Remove the name from the original list
-        nameList.firstChild.remove();
+        names.splice(names.indexOf(name), 1);
         // Add the name to the ordered list
         orderedNames.push(name);
-        populateList('ordered-list', orderedNames);
-        currentNumber++;
+        populateTable('name-table', names);
+        populateTable('ordered-table', orderedNames, true);
     }
 });
 
@@ -42,16 +47,18 @@ document.getElementById('download-btn').addEventListener('click', function() {
     URL.revokeObjectURL(url);
 });
 
-function populateList(listId, namesArray) {
-    var list = document.getElementById(listId);
-    // Clear the list
-    while (list.firstChild) {
-        list.firstChild.remove();
+function populateTable(tableId, namesArray, numbered=false) {
+    var table = document.getElementById(tableId);
+    // Clear the table
+    while (table.firstChild) {
+        table.firstChild.remove();
     }
-    // Add each name to the list
+    // Add each name to the table
     for (var i = 0; i < namesArray.length; i++) {
-        var listItem = document.createElement('li');
-        listItem.textContent = (i + 1) + '. ' + namesArray[i];
-        list.appendChild(listItem);
+        var row = document.createElement('tr');
+        var cell = document.createElement('td');
+        cell.textContent = numbered ? (i + 1) + '. ' + namesArray[i] : namesArray[i];
+        row.appendChild(cell);
+        table.appendChild(row);
     }
 }
