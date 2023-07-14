@@ -1,68 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Name Ordering</title>
     <style>
-        /* Basic CSS for layout */
-        #content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+        #name-table tr:hover, #ordered-table tr:hover {
+            background-color: #f5f5f5;
         }
-        #tables, #table-titles {
-            display: flex;
-            justify-content: space-around;
-            width: 80%;  /* Make it less than 100% to keep away from the edges */
-            margin-top: 20px;
+        #name-table, #ordered-table {
+            width: 30%;
+            margin: 0 20%;
         }
-        #all-names, #ordered-names {
-            width: 25%; /* This ensures the tables align with the titles */
-            margin-left: -20px;
+        #upload-btn, #go-btn, #download-btn {
+            width: 100px;
+            height: 50px;
         }
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        #all-names {
+            float: left;
+            width: 50%;
         }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        #download-btn {
-            height: 20px;
-            align-self: center;
-        }
-        td:hover {
-            background-color: #add8e6;
+        #ordered-names {
+            float: right;
+            width: 50%;
         }
     </style>
 </head>
 <body>
-    <div id="content">
-        <h1>Name Ordering App</h1>
-        <input type="file" id="file-upload" accept=".csv">
-        <button id="upload-btn">Upload Names</button>
-        <button id="go-btn">Go</button>
-        <div id="table-titles">
-            <h2>All Names</h2>
-            <button id="download-btn">Download Ordered Names</button>
-            <h2>Ordered Names</h2>
-        </div>
-        <div id="tables">
-            <div id="all-names">
-                <input type="text" id="search-bar" placeholder="Search names">
-                <table id="name-table">
-                    <!-- This is where the names will be inserted -->
-                </table>
-            </div>
-            <div id="ordered-names">
-                <table id="ordered-table">
-                    <!-- Ordered names will be inserted here -->
-                </table>
-            </div>
-        </div>
+    <input type="file" id="file-upload" accept=".csv" style="display:none;">
+    <button id="upload-btn">Upload</button>
+    <button id="go-btn">Go</button>
+    <div id="all-names">
+        <h1>All Names</h1>
+        <input type="text" id="search-bar" placeholder="Search names">
+        <table id="name-table"></table>
     </div>
-    <script src="script.js"></script>
+    <div id="ordered-names">
+        <button id="download-btn" style="float: right;">Download Ordered Names</button>
+        <h1>Ordered Names</h1>
+        <table id="ordered-table"></table>
+    </div>
+    <script src="main.js"></script>
 </body>
 </html>
