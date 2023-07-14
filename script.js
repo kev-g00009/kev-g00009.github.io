@@ -10,8 +10,6 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     reader.onload = function(e) {
         // This function is called when the file is loaded
         var text = reader.result;
-        // CSV files may have carriage returns (\r), let's clean that up
-        text = text.replace(/\r/g, "");
         names = text.split('\n'); // Assuming names are separated by new lines
         names.sort(); // Sort the names in alphabetical order
 
