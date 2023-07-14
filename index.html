@@ -4,11 +4,15 @@
     <title>Name Ordering</title>
     <style>
         /* Basic CSS for layout */
+        #content {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-direction: column;
+        }
         #all-names {
-            position: absolute;
-            right: 0;
-            top: 0;
             width: 50%; /* The list takes up half the page width */
+            margin-top: 20px;
         }
         ul {
             list-style-type: none;
@@ -17,16 +21,16 @@
     </style>
 </head>
 <body>
-    <div>
+    <div id="content">
         <h1>Name Ordering App</h1>
-        <input type="file" id="file-upload" accept=".txt">
+        <input type="file" id="file-upload" accept=".xls,.xlsx">
         <button id="upload-btn">Upload Names</button>
-    </div>
-    <div id="all-names">
-        <h2>All Names</h2>
-        <ul id="name-list">
-            <!-- This is where the names will be inserted -->
-        </ul>
+        <div id="all-names">
+            <h2>All Names</h2>
+            <ul id="name-list">
+                <!-- This is where the names will be inserted -->
+            </ul>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
