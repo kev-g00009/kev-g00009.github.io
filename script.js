@@ -1,6 +1,5 @@
 var names;
 var orderedNames = [];
-var currentNumber = 1;
 var ordering = false;
 
 document.getElementById('upload-btn').addEventListener('click', function() {
