@@ -61,11 +61,11 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
 //     }
 // };
 
-window.onload = function() {
-    orderedNames = [];
-    localStorage.clear();  // Clear localStorage
-    populateTable('ordered-table', orderedNames, true);
-};
+// window.onload = function() {
+//     orderedNames = [];
+//     localStorage.clear();  // Clear localStorage
+//     populateTable('ordered-table', orderedNames, true);
+// };
 
 
 document.getElementById('download-btn').addEventListener('click', function() {
