@@ -28,6 +28,7 @@ document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var name = e.target.textContent;
         names.splice(names.indexOf(name), 1);
+        allNames.splice(allNames.indexOf(name), 1);  // Also remove the name from allNames
         orderedNames.push(name);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
@@ -40,7 +41,9 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
         if (window.confirm('Are you sure you want to put back the name ' + name + '?')) {
             orderedNames.splice(orderedNames.indexOf(name), 1);
             names.push(name);
+            allNames.push(name);  // Also add the name back to allNames
             names.sort();
+            allNames.sort();  // Sort allNames to maintain the alphabetical order
             populateTable('name-table', names);
             populateTable('ordered-table', orderedNames, true);
         }
