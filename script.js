@@ -32,6 +32,7 @@ document.getElementById('name-table').addEventListener('click', function(e) {
         orderedNames.push(name);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
+        localStorage.setItem('orderedNames', JSON.stringify(orderedNames));  // Save orderedNames to localStorage
     }
 });
 
@@ -46,9 +47,19 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
             allNames.sort();  // Sort allNames to maintain the alphabetical order
             populateTable('name-table', names);
             populateTable('ordered-table', orderedNames, true);
+            localStorage.setItem('orderedNames', JSON.stringify(orderedNames));  // Save orderedNames to localStorage
         }
     }
 });
+
+// At the beginning, check if we have any orderedNames saved
+window.onload = function() {
+    var savedNames = JSON.parse(localStorage.getItem('orderedNames'));
+    if (savedNames) {
+        orderedNames = savedNames;
+        populateTable('ordered-table', orderedNames, true);
+    }
+};
 
 document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((name, i) => (i + 1) + '. ' + name).join('\n');
@@ -80,3 +91,8 @@ function populateTable(tableId, namesArray, numbered=false) {
         table.appendChild(row);
     }
 }
+
+window.addEventListener('beforeunload', function (e) {
+    e.preventDefault();  // Cancel the event
+    e.returnValue = '';  // Chrome requires returnValue to be set
+});
