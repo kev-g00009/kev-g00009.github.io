@@ -9,16 +9,16 @@ document.getElementById('upload-btn').addEventListener('click', function() {
 
     reader.onload = function(e) {
         var text = reader.result;
-        names = text.split('\n'); // Assuming names are separated by new lines
-        names.sort(); // Sort the names in alphabetical order
+        names = text.split('\n');
+        names.sort();
         populateTable('name-table', names);
     };
 
-    reader.readAsText(file); // This triggers the file reading
+    reader.readAsText(file);
 });
 
 document.getElementById('go-btn').addEventListener('click', function() {
-    ordering = !ordering; // Toggle the ordering state
+    ordering = !ordering;
     document.getElementById('go-btn').textContent = ordering ? 'Stop' : 'Go';
 });
 
@@ -34,11 +34,11 @@ document.getElementById('name-table').addEventListener('click', function(e) {
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
-        var name = e.target.textContent.split('. ')[1]; // Remove the number
+        var name = e.target.textContent.split('. ')[1];
         if (window.confirm('Are you sure you want to put back the name ' + name + '?')) {
             orderedNames.splice(orderedNames.indexOf(name), 1);
             names.push(name);
-            names.sort(); // Re-sort the names
+            names.sort();
             populateTable('name-table', names);
             populateTable('ordered-table', orderedNames, true);
         }
@@ -54,6 +54,12 @@ document.getElementById('download-btn').addEventListener('click', function() {
     a.download = 'ordered-names.csv';
     a.click();
     URL.revokeObjectURL(url);
+});
+
+document.getElementById('search-bar').addEventListener('input', function() {
+    var searchText = document.getElementById('search-bar').value;
+    var filteredNames = names.filter(name => name.toLowerCase().includes(searchText.toLowerCase()));
+    populateTable('name-table', filteredNames);
 });
 
 function populateTable(tableId, namesArray, numbered=false) {
