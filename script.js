@@ -36,6 +36,22 @@ document.getElementById('name-table').addEventListener('click', function(e) {
     }
 });
 
+document.getElementById('ordered-table').addEventListener('click', function(e) {
+    if (e.target && e.target.nodeName == "TD") {
+        var name = e.target.textContent;
+        var confirmation = confirm(`Are you sure you want to put back the name ${name}?`);
+        if (confirmation) {
+            // Remove the name from the ordered list
+            orderedNames.splice(orderedNames.indexOf(name), 1);
+            // Add the name back to the original list
+            names.push(name);
+            names.sort(); // Keep the names sorted
+            populateTable('name-table', names);
+            populateTable('ordered-table', orderedNames, true);
+        }
+    }
+});
+
 document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.join('\n');
     var blob = new Blob([csv], {type: 'text/csv'});
