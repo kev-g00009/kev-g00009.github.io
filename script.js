@@ -1,4 +1,5 @@
-var names;
+var allNames;  // The original list of names
+var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
 
@@ -9,8 +10,9 @@ document.getElementById('upload-btn').addEventListener('click', function() {
 
     reader.onload = function(e) {
         var text = reader.result;
-        names = text.split('\n');
-        names.sort();
+        allNames = text.split('\n');
+        allNames.sort();
+        names = allNames.slice();  // Copy the original list to the displayed list
         populateTable('name-table', names);
     };
 
@@ -58,8 +60,8 @@ document.getElementById('download-btn').addEventListener('click', function() {
 
 document.getElementById('search-bar').addEventListener('input', function() {
     var searchText = document.getElementById('search-bar').value;
-    var filteredNames = names.filter(name => name.toLowerCase().includes(searchText.toLowerCase()));
-    populateTable('name-table', filteredNames);
+    names = allNames.filter(name => name.toLowerCase().includes(searchText.toLowerCase()));
+    populateTable('name-table', names);
 });
 
 function populateTable(tableId, namesArray, numbered=false) {
