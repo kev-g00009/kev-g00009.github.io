@@ -10,16 +10,14 @@
             align-items: center;
             flex-direction: column;
         }
-        #tables {
+        #tables, #table-titles {
             display: flex;
             justify-content: space-around;
             width: 80%;  /* Make it less than 100% to keep away from the edges */
             margin-top: 20px;
         }
-        #table-titles {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;  /* Match the width of the tables */
+        #all-names, #ordered-names {
+            width: 50%; /* This ensures the tables align with the titles */
         }
         table {
             border-collapse: collapse;
