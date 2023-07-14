@@ -10,11 +10,19 @@
             align-items: center;
             flex-direction: column;
         }
-        #tables, #table-titles, #all-names, #ordered-names {
+        #tables, #table-titles {
             display: flex;
             justify-content: space-around;
             width: 80%;  /* Make it less than 100% to keep away from the edges */
-            margin-top: 20px;
+            margin-top: 15px;
+        }
+        #all-names {
+            width: 25%; /* This ensures the tables align with the titles */
+            margin-right: 50px;
+        }
+        #ordered-names {
+            width: 25%; /* This ensures the tables align with the titles */
+            margin-left: 50px;
         }
         table {
             border-collapse: collapse;
@@ -35,6 +43,9 @@
         #go-btn {
             margin-top: 10px;
         }
+        #search-bar {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -49,8 +60,8 @@
             <h2>Ordered Names</h2>
         </div>
         <div id="tables">
-            <input type="text" id="search-bar" placeholder="Search names">
             <div id="all-names">
+                <input type="text" id="search-bar" placeholder="Search names">
                 <table id="name-table">
                     <!-- This is where the names will be inserted -->
                 </table>
