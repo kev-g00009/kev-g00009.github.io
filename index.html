@@ -10,19 +10,11 @@
             align-items: center;
             flex-direction: column;
         }
-        #tables, #table-titles {
+        #tables, #table-titles, #all-names, #ordered-names {
             display: flex;
             justify-content: space-around;
             width: 80%;  /* Make it less than 100% to keep away from the edges */
             margin-top: 20px;
-        }
-        #all-names {
-            width: 25%; /* This ensures the tables align with the titles */
-            margin-right: 30px;
-        }
-        #ordered-names {
-            width: 25%; /* This ensures the tables align with the titles */
-            margin-left: 30px;
         }
         table {
             border-collapse: collapse;
@@ -44,7 +36,7 @@
 </head>
 <body>
     <div id="content">
-        <h1>Name Ordering App</h1>
+        <h1>Name Ordering(beta)</h1>
         <input type="file" id="file-upload" accept=".csv">
         <button id="upload-btn">Upload Names</button>
         <button id="go-btn">Go</button>
