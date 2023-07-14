@@ -12,14 +12,15 @@
         }
         #tables {
             display: flex;
-            justify-content: space-around;
-            width: 80%;  /* Make it less than 100% to keep away from the edges */
+            justify-content: space-between;
+            width: 70%;  /* Adjusting width for better alignment */
             margin-top: 20px;
         }
-        #table-titles {
+        .name-list {
+            width: 45%;  /* Each list takes up 45% of the tables width */
             display: flex;
-            justify-content: space-between;
-            width: 80%;  /* Match the width of the tables */
+            flex-direction: column;
+            align-items: center;  /* Center align the titles and tables */
         }
         table {
             border-collapse: collapse;
@@ -45,18 +46,16 @@
         <input type="file" id="file-upload" accept=".csv">
         <button id="upload-btn">Upload Names</button>
         <button id="go-btn">Go</button>
-        <div id="table-titles">
-            <h2>All Names</h2>
-            <button id="download-btn">Download Ordered Names</button>
-            <h2>Ordered Names</h2>
-        </div>
         <div id="tables">
-            <div id="all-names">
+            <div class="name-list">
+                <h2>All Names</h2>
                 <table id="name-table">
                     <!-- This is where the names will be inserted -->
                 </table>
             </div>
-            <div id="ordered-names">
+            <button id="download-btn">Download Ordered Names</button>
+            <div class="name-list">
+                <h2>Ordered Names</h2>
                 <table id="ordered-table">
                     <!-- Ordered names will be inserted here -->
                 </table>

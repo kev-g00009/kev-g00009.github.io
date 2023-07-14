@@ -8,10 +8,8 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     var reader = new FileReader();
 
     reader.onload = function(e) {
-        // This function is called when the file is loaded
-        var text = reader.result;
-        names = text.split('\n'); // Assuming names are separated by new lines
-        names.sort(); // Sort the names in alphabetical order
+        // Parse the CSV data into an array, trim any whitespace, and sort alphabetically
+        names = e.target.result.split(',').map(name => name.trim()).sort();
 
         populateTable('name-table', names);
     };
