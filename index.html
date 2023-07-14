@@ -1,10 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Your Website Title</title>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <script src="your_script.js"></script>
-  </body>
+<head>
+    <title>Name Ordering</title>
+    <style>
+        /* Basic CSS for layout */
+        #all-names {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 50%; /* The list takes up half the page width */
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Name Ordering App</h1>
+        <input type="file" id="file-upload" accept=".txt">
+        <button id="upload-btn">Upload Names</button>
+    </div>
+    <div id="all-names">
+        <h2>All Names</h2>
+        <ul id="name-list">
+            <!-- This is where the names will be inserted -->
+        </ul>
+    </div>
+    <script src="script.js"></script>
+</body>
 </html>
