@@ -6,13 +6,14 @@
         /* Basic CSS for layout */
         #content {
             display: flex;
-            justify-content: flex-end;
-            align-items: left;
+            justify-content: center;
+            align-items: center;
             flex-direction: column;
         }
-        #all-names {
-            align-items: right;
-            width: 50%; /* The list takes up half the page width */
+        #lists {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
             margin-top: 20px;
         }
         ul {
@@ -26,12 +27,22 @@
         <h1>Name Ordering App</h1>
         <input type="file" id="file-upload" accept=".xls,.xlsx">
         <button id="upload-btn">Upload Names</button>
-        <div id="all-names">
-            <h2>All Names</h2>
-            <ul id="name-list">
-                <!-- This is where the names will be inserted -->
-            </ul>
+        <button id="go-btn">Go</button>
+        <div id="lists">
+            <div id="ordered-names">
+                <h2>Ordered Names</h2>
+                <ul id="ordered-list">
+                    <!-- Ordered names will be inserted here -->
+                </ul>
+            </div>
+            <div id="all-names">
+                <h2>All Names</h2>
+                <ul id="name-list">
+                    <!-- This is where the names will be inserted -->
+                </ul>
+            </div>
         </div>
+        <button id="download-btn">Download Ordered Names</button>
     </div>
     <script src="script.js"></script>
 </body>
