@@ -93,7 +93,14 @@ function populateTable(tableId, namesArray, numbered=false) {
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         var cell = document.createElement('td');
-        cell.textContent = numbered ? currentAssistantNumber + '00' + (i + 1) + '. ' + namesArray[i] : namesArray[i];
+        if (i <= 8) {
+            cell.textContent = numbered ? currentAssistantNumber + '00' + (i + 1) + '. ' + namesArray[i] : namesArray[i];
+        } else if ((i >= 9) && (i <= 98)) {
+            cell.textContent = numbered ? currentAssistantNumber + '0' + (i + 1) + '. ' + namesArray[i] : namesArray[i];
+        } else if ((i >= 99) && (i <= 998)) {
+            cell.textContent = numbered ? currentAssistantNumber + (i + 1) + '. ' + namesArray[i] : namesArray[i];
+        }
+        
         row.appendChild(cell);
         table.appendChild(row);
     }
