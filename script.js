@@ -10,7 +10,7 @@ document.getElementById('upload-btn').addEventListener('click', function() {
 
     reader.onload = function(e) {
         var text = reader.result;
-        allNames = text.split('\n');
+        allNames = text.split('\\n').map(row => row.split(','));
         allNames.sort();
         names = allNames.slice();  // Copy the original list to the displayed list
         populateTable('name-table', names);
@@ -18,6 +18,7 @@ document.getElementById('upload-btn').addEventListener('click', function() {
 
     reader.readAsText(file);
 });
+
 
 document.getElementById('go-btn').addEventListener('click', function() {
     ordering = !ordering;
