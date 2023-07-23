@@ -10,11 +10,18 @@ document.getElementById('upload-btn').addEventListener('click', function() {
 
     reader.onload = function(e) {
         var text = reader.result;
-        allNames = text.split('\n');
+        var lines = text.split('\\n');
+        allNames = lines.map(function(line) {
+            // Split each line into columns
+            var columns = line.split(',');
+            // Handle the columns here...
+            return columns[0];  // Just return the first column for now
+        });
         allNames.sort();
         names = allNames.slice();  // Copy the original list to the displayed list
         populateTable('name-table', names);
     };
+    
 
     reader.readAsText(file);
 });
