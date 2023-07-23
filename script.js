@@ -2,6 +2,11 @@ var allNames;  // The original list of names
 var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
+const assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3'];
+const photographerNames = ['Photographer 1', 'Photographer 2', 'Photographer 3'];
+
+let assistant = '';
+let photographers = [];
 
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
@@ -103,3 +108,26 @@ window.addEventListener('beforeunload', function (e) {
     e.preventDefault();  // Cancel the event
     e.returnValue = '';  // Chrome requires returnValue to be set
 });
+
+window.onload = function() {
+    assistant = window.prompt('Who is the assistant?', assistantNames.join('\n'));
+    
+    let stationIndex = 1;
+    while (true) {
+        const photographer = window.prompt(`Who is the photographer in Station #${stationIndex}? Click Cancel or type Done to finish.`, photographerNames.join('\n'));
+        if (photographer === 'Done' || photographer === null) {
+            break;
+        }
+        photographers.push(photographer);
+
+        // Create a new paragraph element for the station
+        const newStationElement = document.createElement('p');
+        newStationElement.id = `station${stationIndex}Display`;
+        newStationElement.textContent = `Station #${stationIndex}: ${photographer}`;
+        document.body.appendChild(newStationElement);
+
+        stationIndex++;
+    }
+
+    document.getElementById('assistantDisplay').textContent += assistant;
+}
