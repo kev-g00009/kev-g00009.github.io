@@ -145,7 +145,7 @@ $( function() {
           $(`#photographers option[value='${selectedPhotographer}']`).remove();
 
           // Update the title for the next station
-          photographerDialog.dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
+          photographerDialog.dialog('option', 'title', `Station #${stationNumber} photographer:`);
         },
         "Done": function() {
           photographerDialog.dialog( "close" );
@@ -153,7 +153,7 @@ $( function() {
       },
       open: function() {
         // Set the initial title
-        $(this).dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
+        $(this).dialog('option', 'title', `Station #${stationNumber} photographer:`);
       }
     });
 
