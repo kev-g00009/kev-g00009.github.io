@@ -98,7 +98,7 @@ function populateTable(tableId, namesArray, numbered=false) {
         } else if ((i >= 9) && (i <= 98)) {
             cell.textContent = numbered ? currentAssistantNumber + '0' + (i + 1) + '. ' + namesArray[i] : namesArray[i];
         } else if ((i >= 99) && (i <= 998)) {
-            cell.textContent = numbered ? currentAssistantNumber + (i + 1) + '. ' + namesArray[i] : namesArray[i];
+            cell.textContent = numbered ? currentAssistantNumber + '' + (i + 1) + '. ' + namesArray[i] : namesArray[i];
         }
         
         row.appendChild(cell);
