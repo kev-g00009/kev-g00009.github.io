@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Name Ordering</title>
+    <title>My Page</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         #configuration {
             max-height: 200px;
             overflow: auto;
+        }
+        #rest-of-content {
+            position: absolute;
+            top: 250px; /* Adjust this value as needed */
         }
     </style>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -62,7 +66,7 @@
 </head>
 <body>
     <div id="configuration">
-        <h3>Current Configuration:</h3>
+        <h2>Current Configuration:</h2>
         <p id="assistantDisplay">Assistant: </p>
         <div id="stations"></div>
     </div>
@@ -75,39 +79,41 @@
       </select>
     </div>
 
-    <div id="photographer-dialog-form" title="ChooseLL a photographer">
+    <div id="photographer-dialog-form" title="Choose a photographer">
       <select id="photographers">
-        <option value="Photographer 4">Photographer 1</option>
+        <option value="Photographer 4">Photographer 6</option>
         <option value="Photographer 2">Photographer 2</option>
         <option value="Photographer 3">Photographer 3</option>
       </select>
     </div>
-
-    <div id="content">
-        <h1>Name Ordering(beta)</h1>
-        <input type="file" id="file-upload" accept=".csv">
-        <button id="upload-btn">Upload Names</button>
-        <h3>Don't Forget to Click Go!</h3>
-        <button id="go-btn">Go</button>
-        <div id="table-titles">
-            <h2>All Names</h2>
-            <button id="download-btn">Download Ordered Names</button>
-            <h2>Ordered Names</h2>
-        </div>
-        <div id="tables">
-            <div id="all-names">
-                <input type="text" id="search-bar" placeholder="Search names">
-                <table id="name-table">
-                    <!-- This is where the names will be inserted -->
-                </table>
+    <div id="rest-of-content">
+        <div id="content">
+            <h1>Name Ordering(beta)</h1>
+            <input type="file" id="file-upload" accept=".csv">
+            <button id="upload-btn">Upload Names</button>
+            <h3>Don't Forget to Click Go!</h3>
+            <button id="go-btn">Go</button>
+            <div id="table-titles">
+                <h2>All Names</h2>
+                <button id="download-btn">Download Ordered Names</button>
+                <h2>Ordered Names</h2>
             </div>
-            <div id="ordered-names">
-                <table id="ordered-table">
-                    <!-- Ordered names will be inserted here -->
-                </table>
+            <div id="tables">
+                <div id="all-names">
+                    <input type="text" id="search-bar" placeholder="Search names">
+                    <table id="name-table">
+                        <!-- This is where the names will be inserted -->
+                    </table>
+                </div>
+                <div id="ordered-names">
+                    <table id="ordered-table">
+                        <!-- Ordered names will be inserted here -->
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

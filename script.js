@@ -122,6 +122,7 @@ $( function() {
     assistantDialog = $( "#assistant-dialog-form" ).dialog({
       autoOpen: false,
       modal: true,
+      width: 500, // Set the width of the dialog
       buttons: {
         "Done": function() {
           selectedAssistant = assistant.val();
@@ -135,6 +136,7 @@ $( function() {
     photographerDialog = $( "#photographer-dialog-form" ).dialog({
       autoOpen: false,
       modal: true,
+      width: 500, // Set the width of the dialog
       buttons: {
         "Add Photographer": function() {
           var selectedPhotographer = photographers.val();
@@ -145,7 +147,7 @@ $( function() {
           $(`#photographers option[value='${selectedPhotographer}']`).remove();
 
           // Update the title for the next station
-          photographerDialog.dialog('option', 'title', `Station #${stationNumber} photographer:`);
+          photographerDialog.dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
         },
         "Done": function() {
           photographerDialog.dialog( "close" );
@@ -153,7 +155,7 @@ $( function() {
       },
       open: function() {
         // Set the initial title
-        $(this).dialog('option', 'title', `Station #${stationNumber} photographer:`);
+        $(this).dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
       }
     });
 
