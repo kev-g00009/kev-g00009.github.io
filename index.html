@@ -2,6 +2,9 @@
 <html>
 <head>
     <title>Name Ordering</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style>
         /* Basic CSS for layout */
         #content {
@@ -54,7 +57,24 @@
 <body>
     <h2>Current Configuration:</h2>
     <p id="assistantDisplay">Assistant: </p>
-    
+    <div id="stations"></div>
+
+    <div id="assistant-dialog-form" title="Choose an assistant">
+      <select id="assistant">
+        <option value="Assistant 1">Assistant 1</option>
+        <option value="Assistant 2">Assistant 2</option>
+        <option value="Assistant 3">Assistant 3</option>
+      </select>
+    </div>
+
+    <div id="photographer-dialog-form" title="Choose a photographer">
+      <select id="photographers">
+        <option value="Photographer 1">Photographer 1</option>
+        <option value="Photographer 2">Photographer 2</option>
+        <option value="Photographer 3">Photographer 3</option>
+      </select>
+    </div>
+
     <div id="content">
         <h1>Name Ordering(beta)</h1>
         <input type="file" id="file-upload" accept=".csv">

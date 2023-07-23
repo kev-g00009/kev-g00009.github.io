@@ -109,25 +109,48 @@ window.addEventListener('beforeunload', function (e) {
     e.returnValue = '';  // Chrome requires returnValue to be set
 });
 
-window.onload = function() {
-    assistant = window.prompt('Who is the assistant?', assistantNames.join('\n'));
-    
-    let stationIndex = 1;
-    while (true) {
-        const photographer = window.prompt(`Who is the photographer in Station #${stationIndex}? Click Cancel or type Done to finish.`, photographerNames.join('\n'));
-        if (photographer === 'Done' || photographer === null) {
-            break;
-        }
-        photographers.push(photographer);
+$( function() {
+    var assistantDialog, photographerDialog,
+    assistant = $( "#assistant" ),
+    photographers = $( "#photographers" ),
+    assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3'],
+    photographerNames = ['Photographer 1', 'Photographer 2', 'Photographer 3'],
+    selectedAssistant = "",
+    selectedPhotographers = [],
+    stationNumber = 1;
 
-        // Create a new paragraph element for the station
-        const newStationElement = document.createElement('p');
-        newStationElement.id = `station${stationIndex}Display`;
-        newStationElement.textContent = `Station #${stationIndex}: ${photographer}`;
-        document.body.appendChild(newStationElement);
-
-        stationIndex++;
+    function addStation() {
+        $( "#stations" ).append( "<p>Station #" + stationNumber + ": " + selectedPhotographers[stationNumber-1] + "</p>" );
+        stationNumber++;
     }
 
-    document.getElementById('assistantDisplay').textContent += assistant;
-}
+    assistantDialog = $( "#assistant-dialog-form" ).dialog({
+      autoOpen: false,
+      modal: true,
+      buttons: {
+        "Done": function() {
+          selectedAssistant = assistant.val();
+          $( "#assistantDisplay" ).text( "Assistant: " + selectedAssistant );
+          assistantDialog.dialog( "close" );
+          photographerDialog.dialog( "open" );
+        }
+      }
+    });
+
+    photographerDialog = $( "#photographer-dialog-form" ).dialog({
+      autoOpen: false,
+      modal: true,
+      buttons: {
+        "Add Photographer": function() {
+          selectedPhotographers.push(photographers.val());
+          addStation();
+          photographers.val("");
+        },
+        "Done": function() {
+          photographerDialog.dialog( "close" );
+        }
+      }
+    });
+
+    $( "#assistant-dialog-form" ).dialog( "open" );
+});
