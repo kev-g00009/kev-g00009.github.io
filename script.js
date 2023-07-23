@@ -2,11 +2,6 @@ var allNames;  // The original list of names
 var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
-const assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3'];
-const photographerNames = ['Photographer 1', 'Photographer 2', 'Photographer 3'];
-
-let assistant = '';
-let photographers = [];
 
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
