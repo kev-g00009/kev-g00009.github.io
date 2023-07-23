@@ -10,16 +10,8 @@ document.getElementById('upload-btn').addEventListener('click', function() {
 
     reader.onload = function(e) {
         var text = reader.result;
-        var lines = text.split('\\n');
-        allNames = lines.map(function(line) {
-            // Split each line into columns
-            var columns = line.split(',');
-            return columns;  // Return the entire array of columns
-        });
-        // Remove the first row if it contains headers
-        if (isNaN(parseInt(allNames[0][0]))) {
-            allNames.shift();
-        }
+        allNames = text.split('\n');
+        allNames.sort();
         names = allNames.slice();  // Copy the original list to the displayed list
         populateTable('name-table', names);
     };
@@ -93,18 +85,16 @@ document.getElementById('search-bar').addEventListener('input', function() {
     populateTable('name-table', names);
 });
 
-function populateTable(tableId, namesArray) {
+function populateTable(tableId, namesArray, numbered=false) {
     var table = document.getElementById(tableId);
     while (table.firstChild) {
         table.firstChild.remove();
     }
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
-        for (var j = 0; j < namesArray[i].length; j++) {
-            var cell = document.createElement('td');
-            cell.textContent = namesArray[i][j];
-            row.appendChild(cell);
-        }
+        var cell = document.createElement('td');
+        cell.textContent = numbered ? currentAssistantNumber + '00' + (i + 1) + '. ' + namesArray[i] : namesArray[i];
+        row.appendChild(cell);
         table.appendChild(row);
     }
 }
