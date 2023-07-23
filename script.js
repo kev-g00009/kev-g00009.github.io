@@ -137,13 +137,23 @@ $( function() {
       modal: true,
       buttons: {
         "Add Photographer": function() {
-          selectedPhotographers.push(photographers.val());
+          var selectedPhotographer = photographers.val();
+          selectedPhotographers.push(selectedPhotographer);
           addStation();
-          photographers.val("");
+
+          // Remove the selected photographer from the list
+          $(`#photographers option[value='${selectedPhotographer}']`).remove();
+
+          // Update the title for the next station
+          photographerDialog.dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
         },
         "Done": function() {
           photographerDialog.dialog( "close" );
         }
+      },
+      open: function() {
+        // Set the initial title
+        $(this).dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
       }
     });
 
