@@ -3,8 +3,6 @@ var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
 
-
-
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
     var file = fileInput.files[0];
@@ -95,7 +93,7 @@ function populateTable(tableId, namesArray, numbered=false) {
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         var cell = document.createElement('td');
-        cell.textContent = numbered ? (i + 1) + '. ' + namesArray[i] : namesArray[i];
+        cell.textContent = numbered ? currentAssistantNumber + '00' + (i + 1) + '. ' + namesArray[i] : namesArray[i];
         row.appendChild(cell);
         table.appendChild(row);
     }
@@ -120,24 +118,22 @@ $( function() {
         $( "#stations" ).append( "<p>Station #" + stationNumber + ": " + selectedPhotographers[stationNumber-1] + "</p>" );
         stationNumber++;
     }
-    let currentAssistantNumber = 0;
-    let orderNumber = 0;
 
     assistantDialog = $( "#assistant-dialog-form" ).dialog({
-        autoOpen: false,
-        modal: true,
-        buttons: {
-            "Done": function() {
-                selectedAssistant = assistant.val();
-    
-                // Get the selected assistant's number
-                currentAssistantNumber = $('#assistant option:selected').data('number');
-    
-                $( "#assistantDisplay" ).text( "Assistant: " + selectedAssistant );
-                assistantDialog.dialog( "close" );
-                photographerDialog.dialog( "open" );
-            }
+      autoOpen: false,
+      modal: true,
+      width: 500, // Set the width of the dialog
+      buttons: {
+        "Done": function() {
+            // Get the selected assistant's number
+            currentAssistantNumber = $('#assistant option:selected').data('number');
+            orderNumber = 0;
+          selectedAssistant = assistant.val();
+          $( "#assistantDisplay" ).text( "Assistant: " + selectedAssistant );
+          assistantDialog.dialog( "close" );
+          photographerDialog.dialog( "open" );
         }
+      }
     });
 
     photographerDialog = $( "#photographer-dialog-form" ).dialog({
@@ -157,6 +153,9 @@ $( function() {
           photographerDialog.dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
         },
         "Done": function() {
+            // Get the selected assistant's number
+            currentAssistantNumber = $('#assistant option:selected').data('number');
+            orderNumber = 0;
           photographerDialog.dialog( "close" );
         }
       },
@@ -168,10 +167,3 @@ $( function() {
 
     $( "#assistant-dialog-form" ).dialog( "open" );
 });
-
-function moveNameToOrderedNames() {
-    orderNumber++;
-    const name = $(this).text();
-    const orderedName = `${currentAssistantNumber}00${orderNumber} - ${name}`;
-    // Now use `orderedName` instead of `name` when adding to the "Ordered Names" list
-}
