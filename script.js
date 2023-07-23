@@ -109,7 +109,7 @@ $( function() {
     assistant = $( "#assistant" ),
     photographers = $( "#photographers" ),
     assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3'],
-    photographerNames = ['Photographer 1', 'Photographer 2', 'Photographer 3'],
+    photographerNames = ['John', 'Photographer 2', 'Photographer 3'],
     selectedAssistant = "",
     selectedPhotographers = [],
     stationNumber = 1;
