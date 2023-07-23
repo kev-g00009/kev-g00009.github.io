@@ -4,18 +4,9 @@
     <title>My Page</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
-        #container {
-            display: flex;
-            flex-direction: column;
+        .ui-dialog {
+            z-index: 1000 !important; /* Set a high z-index on the dialogs */
         }
-        #configuration {
-            max-height: 200px;
-            overflow: auto;
-        }
-        #rest-of-content {
-            flex-grow: 1;
-        }
-        /* Basic CSS for layout */
         #content {
             display: flex;
             justify-content: center;
