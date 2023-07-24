@@ -12,9 +12,8 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     Papa.parse(file, {
         header: true,
         complete: function(results) {
-            allNumbers = results.data.map(row => row.Number);  // New array to store the numbers
-            allNames = results.data.map(row => ({Name: row.Name}));  // Updated to only store the names
-            names = allNames.slice();  // Copy the original list to the displayed list
+            allNames = results.data.map((row, index) => ({...row, originalIndex: index}));
+            names = [...allNames];  // Make a copy of the allNames array
             populateTable('name-table', names);
         }
     });
@@ -31,8 +30,7 @@ document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        nameRow.nameIndex = names.findIndex(n => n.Name === nameRow.Name);  // Use 'nameIndex' instead of 'originalIndex'
-        names.splice(nameRow.nameIndex, 1);
+        names.splice(names.findIndex(n => n.originalIndex === nameRow.originalIndex), 1);
         orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
@@ -43,8 +41,8 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name), 1);
-        names.splice(nameRow.nameIndex, 0, nameRow);  // Use 'nameIndex' instead of 'originalIndex'
+        orderedNames.splice(orderedNames.findIndex(n => n.originalIndex === nameRow.originalIndex), 1);
+        names.splice(nameRow.originalIndex, 0, nameRow);  // Use 'originalIndex' to insert the name back to its original position
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
     }
@@ -106,7 +104,7 @@ function populateTable(tableId, namesArray, numbered = false) {
         cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
         if(numbered) row.appendChild(cell);  // only add this cell if table is numbered
         for (var key in namesArray[i]) {
-            if (key !== 'nameIndex') {  // Don't create a column for the 'nameIndex' property
+            if (key !== 'originalIndex') {  // Don't create a column for the 'originalIndex' property
                 cell = document.createElement('td');
                 cell.textContent = namesArray[i][key];
                 row.appendChild(cell);
