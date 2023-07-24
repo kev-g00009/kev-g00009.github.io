@@ -12,14 +12,9 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     Papa.parse(file, {
         header: true,
         complete: function(results) {
-            allNames = results.data;
+            allNumbers = results.data.map(row => row.Number);  // New array to store the numbers
+            allNames = results.data.map(row => ({Name: row.Name}));  // Updated to only store the names
             names = allNames.slice();  // Copy the original list to the displayed list
-
-            // Add a 'nameIndex' property to each name object
-            names.forEach((name, index) => {
-                name.nameIndex = index;
-            });
-
             populateTable('name-table', names);
         }
     });
@@ -32,12 +27,12 @@ document.getElementById('go-btn').addEventListener('click', function() {
     document.getElementById('go-btn').textContent = ordering ? 'Stop' : 'Go';
 });
 
-// Update the 'click' event listener on the 'name-table'
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        names.splice(names.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
+        nameRow.nameIndex = names.findIndex(n => n.Name === nameRow.Name);  // Use 'nameIndex' instead of 'originalIndex'
+        names.splice(nameRow.nameIndex, 1);
         orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
@@ -48,7 +43,7 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
+        orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name), 1);
         names.splice(nameRow.nameIndex, 0, nameRow);  // Use 'nameIndex' instead of 'originalIndex'
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
@@ -111,7 +106,7 @@ function populateTable(tableId, namesArray, numbered = false) {
         cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
         if(numbered) row.appendChild(cell);  // only add this cell if table is numbered
         for (var key in namesArray[i]) {
-            if (key !== 'nameIndex') {
+            if (key !== 'nameIndex') {  // Don't create a column for the 'nameIndex' property
                 cell = document.createElement('td');
                 cell.textContent = namesArray[i][key];
                 row.appendChild(cell);
