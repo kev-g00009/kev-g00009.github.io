@@ -2,6 +2,7 @@ var allNames;  // The original list of names
 var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
+var numStations = 0;
 
 var originalNames;  // Add this line to keep a copy of the original data
 
@@ -29,11 +30,7 @@ document.getElementById('go-btn').addEventListener('click', function() {
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
-        var nameRow = JSON.parse(row.dataset.row);
-        names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-        orderedNames.push(nameRow);
-        populateTable('name-table', names);
-        populateTable('ordered-table', orderedNames, true);
+        stationDialog.dialog('open');  // Open the station selection dialog
     }
 });
 
@@ -170,6 +167,10 @@ $( function() {
 
           // Update the title for the next station
           photographerDialog.dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
+
+          // Add a new station to the stations-select dropdown
+          $('#stations-select').append(`<option value="Station ${numStations}">Station ${numStations}</option>`);
+          numStations++;
         },
         "Done": function() {
             // Get the selected assistant's number
@@ -184,43 +185,26 @@ $( function() {
       }
     });
 
+    var stationDialog = $( "#station-dialog-form" ).dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: {
+          "Confirm": function() {
+              var selectedStation = $('#stations-select').val();
+              stationDialog.dialog("close");
+  
+              // Move the name to the orderedNames array and add the selected station
+              var nameRow = JSON.parse(row.dataset.row);
+              names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+              nameRow.Station = selectedStation;  // Add the selected station to the row
+              orderedNames.push(nameRow);
+              populateTable('name-table', names);
+              populateTable('ordered-table', orderedNames, true);
+          }
+        }
+      });
+
     $( "#assistant-dialog-form" ).dialog( "open" );
 });
 
 
-// When a row in 'all names' is clicked
-$('.all-names-row').click(function() {
-    // Show the modal
-    $('#stationModal').show();
-    
-    // Get the clicked row
-    var row = $(this);
-    
-    // When the confirm button is clicked
-    $('#confirmButton').click(function() {
-      // Get the selected station
-      var station = $('#stationSelect').val();
-      
-      // Move the row to 'ordered names' and add the station
-      row.appendTo('#orderedNames');
-      row.append('<td>' + station + '</td>');
-      
-      // Hide the modal
-      $('#stationModal').hide();
-    });
-  });
-  
-  // When photographers are added
-  $('#addPhotographersButton').click(function() {
-    // Get the number of photographers
-    var numPhotographers = $('#photographersInput').val();
-    
-    // Clear the station select options
-    $('#stationSelect').empty();
-    
-    // Add the stations to the select options
-    for (var i = 1; i <= numPhotographers; i++) {
-      $('#stationSelect').append('<option value="' + i + '">Station ' + i + '</option>');
-    }
-  });
-  

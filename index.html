@@ -95,6 +95,10 @@
                     </div>
                     <div id="ordered-names">
                         <table id="ordered-table">
+                            <tr>
+                                <th>Station</th> <!-- Added this line -->
+                                <!-- Ordered names will be inserted here -->
+                            </tr>
                             <!-- Ordered names will be inserted here -->
                         </table>
                     </div>
@@ -130,16 +134,13 @@
         <option value="Photographer 9">Photographer 9</option>
       </select>
     </div>
-    
-    <div id="stationModal" class="modal">
-        <div class="modal-content">
-          <h4>Select Station</h4>
-          <select id="stationSelect">
-            <!-- Options will be dynamically added here -->
-          </select>
-          <button id="confirmButton">Confirm</button>
-        </div>
+
+    <div id="station-dialog-form" title="Choose a station">
+        <select id="stations-select">
+            <!-- Options will be dynamically added based on the number of photographers -->
+        </select>
     </div>
+    
     
     <script src="script.js"></script>
 </body>
