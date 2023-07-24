@@ -3,6 +3,8 @@ var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
 var numStations = 0;
+var stations = [];  // The list of station numbers
+
 
 var originalNames;  // Add this line to keep a copy of the original data
 
