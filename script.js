@@ -185,7 +185,7 @@ $( function() {
       }
     });
 
-    var stationDialog = $( "#station-dialog-form" ).dialog({
+    stationDialog = $( "#station-dialog-form" ).dialog({
         autoOpen: false,
         modal: true,
         buttons: {
