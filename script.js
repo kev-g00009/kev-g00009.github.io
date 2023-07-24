@@ -41,6 +41,9 @@ document.getElementById('name-table').addEventListener('click', function(e) {
         var stationDialog = $("#station-dialog-form").dialog({
           autoOpen: false,
           modal: true,
+          open: function() {
+            $("#station-dialog-form").show();  // Show the dialog when it's opened
+          },
           buttons: {
             "Done": function() {
               // Get the selected station
@@ -72,22 +75,24 @@ document.getElementById('name-table').addEventListener('click', function(e) {
     }
   });
 
-document.getElementById('ordered-table').addEventListener('click', function(e) {
+  document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
-        var row = e.target.parentNode;
-        var nameRow = JSON.parse(row.dataset.row);
-        var rowIndex = (orderedNames.findIndex(n => n.originalIndex === nameRow.originalIndex) + 1).toString().padStart(3, '0');
-
-        if (window.confirm("Are you sure you want to move '" + currentAssistantNumber + rowIndex + "' back to 'All Names'?")) {
-            orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-            names.push(nameRow);
-            filteredNames = names;
-            names.sort((a, b) => a.originalIndex - b.originalIndex);  
-            populateTable('name-table', filteredNames);
-            populateTable('ordered-table', orderedNames, true);
-        }
+      var row = e.target.parentNode;
+      var nameRow = JSON.parse(row.dataset.row);
+      var rowIndex = (orderedNames.findIndex(n => n.originalIndex === nameRow.originalIndex) + 1).toString().padStart(3, '0');
+  
+      if (window.confirm("Are you sure you want to move '" + currentAssistantNumber + rowIndex + "' back to 'All Names'?")) {
+        orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+        delete nameRow.station;  // Remove the 'station' property
+        names.push(nameRow);
+        filteredNames = names;
+        names.sort((a, b) => a.originalIndex - b.originalIndex);
+        populateTable('name-table', filteredNames);
+        populateTable('ordered-table', orderedNames, true);
+      }
     }
-});
+  });
+  
 
 
 
