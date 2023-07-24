@@ -139,7 +139,7 @@ window.addEventListener('beforeunload', function (e) {
     e.returnValue = '';  // Chrome requires returnValue to be set
 });
 
-function populateTable(tableId, namesArray, numbered = false) {
+function populateTable(tableId, namesArray, includeStation = false, numbered = false) {
     var table = document.getElementById(tableId);
     while (table.firstChild) {
         table.firstChild.remove();
@@ -152,7 +152,7 @@ function populateTable(tableId, namesArray, numbered = false) {
         cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
         if(numbered) row.appendChild(cell);  
         for (var key in namesArray[i]) {
-            if (key !== 'originalIndex') {  
+            if (key !== 'originalIndex' && (includeStation || key !== 'station')) {  
                 cell = document.createElement('td');
                 cell.textContent = namesArray[i][key];
                 row.appendChild(cell);
@@ -161,6 +161,7 @@ function populateTable(tableId, namesArray, numbered = false) {
         table.appendChild(row);
     }
 }
+
 
 
 $( function() {
