@@ -42,13 +42,17 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-        names.push(nameRow);
-        names.sort((a, b) => a.originalIndex - b.originalIndex);  // Sort the names based on their original index
-        populateTable('name-table', names);
-        populateTable('ordered-table', orderedNames, true);
+        var confirmation = confirm("Are you sure you want to move '" + nameRow.Name + "' back to 'All Names'?");
+        if (confirmation) {
+            orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+            names.push(nameRow);
+            names.sort((a, b) => a.originalIndex - b.originalIndex);  // Sort the names based on their original index
+            populateTable('name-table', names);
+            populateTable('ordered-table', orderedNames, true);
+        }
     }
 });
+
 
 
 // // At the beginning, check if we have any orderedNames saved
