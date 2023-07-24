@@ -17,7 +17,7 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     });
 });
 
-function populateTable(tableId, namesArray) {
+function populateTable(tableId, namesArray, numbered = false) {
     var table = document.getElementById(tableId);
     while (table.firstChild) {
         table.firstChild.remove();
@@ -26,7 +26,8 @@ function populateTable(tableId, namesArray) {
         var row = document.createElement('tr');
         row.dataset.row = JSON.stringify(namesArray[i]);
         var cell = document.createElement('td');
-        cell.textContent = (i + 1) + '.';
+        var rowIndex = (i + 1).toString().padStart(3, '0');
+        cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
         row.appendChild(cell);
         for (var key in namesArray[i]) {
             cell = document.createElement('td');
@@ -86,7 +87,10 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
 
 
 document.getElementById('download-btn').addEventListener('click', function() {
-    var csv = orderedNames.map((row, i) => (i + 1) + ', ' + Object.values(row).join(',')).join('\\n');
+    var csv = orderedNames.map((row, i) => {
+        var rowIndex = (i + 1).toString().padStart(3, '0');
+        return currentAssistantNumber + rowIndex + ', ' + Object.values(row).join(',');
+    }).join('\\n');
     var blob = new Blob([csv], {type: 'text/csv'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
