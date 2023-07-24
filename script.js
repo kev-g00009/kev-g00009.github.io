@@ -3,6 +3,8 @@ var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
 var filteredNames;
+var stations = [];  // Array to store the list of stations
+
 
 
 var originalNames;  // Add this line to keep a copy of the original data
@@ -31,15 +33,44 @@ document.getElementById('go-btn').addEventListener('click', function() {
 
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
-        var row = e.target.parentNode;
-        var nameRow = JSON.parse(row.dataset.row);
-        names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-        filteredNames.splice(filteredNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-        orderedNames.push(nameRow);
-        populateTable('name-table', filteredNames);
-        populateTable('ordered-table', orderedNames, true);
+      var row = e.target.parentNode;
+      var nameRow = JSON.parse(row.dataset.row);
+  
+      // Prompt the user to choose a station
+      $(function() {
+        var stationDialog = $("#station-dialog-form").dialog({
+          autoOpen: false,
+          modal: true,
+          buttons: {
+            "Done": function() {
+              // Get the selected station
+              var selectedStation = $('#stations option:selected').val();
+  
+              // Add the station to the nameRow object
+              nameRow.station = selectedStation;
+  
+              names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+              filteredNames.splice(filteredNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+              orderedNames.push(nameRow);
+              populateTable('name-table', filteredNames);
+              populateTable('ordered-table', orderedNames, true);
+  
+              stationDialog.dialog("close");
+            }
+          }
+        });
+  
+        // Populate the select options with the stations
+        var select = $('#stations');
+        select.empty();
+        stations.forEach(function(station) {
+          select.append($('<option></option>').val(station).html(station));
+        });
+  
+        stationDialog.dialog("open");
+      });
     }
-});
+  });
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
@@ -167,6 +198,7 @@ $( function() {
         "Add Photographer": function() {
           var selectedPhotographer = photographers.val();
           selectedPhotographers.push(selectedPhotographer);
+          stations.push("Station " + stationNumber);  // Add the station to the stations array
           addStation();
 
           // Remove the selected photographer from the list

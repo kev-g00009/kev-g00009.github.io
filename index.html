@@ -71,6 +71,12 @@
         
 
         <div id="rest-of-content">
+            <div id="configuration">
+                <h2>Current Configuration:</h2>
+                <p id="assistantDisplay">Assistant: </p>
+                <div id="stations"></div>
+            </div>
+
             <div id="content">
                 <h1>Name Ordering(beta)</h1>
                 <input type="file" id="file-upload" accept=".csv">
@@ -97,11 +103,7 @@
                 </div>
             </div>
 
-            <div id="configuration">
-                <h2>Current Configuration:</h2>
-                <p id="assistantDisplay">Assistant: </p>
-                <div id="stations"></div>
-            </div>
+            
         </div>
         
     </div>
@@ -134,6 +136,12 @@
       </select>
     </div>
     
+    <div id="station-dialog-form" title="Choose a station">
+        <select id="stations">
+          <!-- The options will be populated dynamically -->
+        </select>
+      </div>
+      
     
     <script src="script.js"></script>
 </body>
