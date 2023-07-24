@@ -42,7 +42,9 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        if (window.confirm("Are you sure you want to move '" + nameRow.Name + "' back to 'All Names'?")) {
+        var rowIndex = (orderedNames.findIndex(n => n.originalIndex === nameRow.originalIndex) + 1).toString().padStart(3, '0');
+
+        if (window.confirm("Are you sure you want to move '" + rowIndex + "' back to 'All Names'?")) {
             orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
             names.push(nameRow);
             names.sort((a, b) => a.originalIndex - b.originalIndex);  // Sort the names based on their original index
