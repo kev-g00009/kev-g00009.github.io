@@ -56,6 +56,9 @@
         #ordered-table tr:hover {
             background-color: #add8e6;  /* Change this to your preferred highlight color */
         }
+        #upload-btn {
+            margin-top: 10px;
+        }
 
     </style>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -128,6 +131,15 @@
       </select>
     </div>
     
+    <div id="stationModal" class="modal">
+        <div class="modal-content">
+          <h4>Select Station</h4>
+          <select id="stationSelect">
+            <!-- Options will be dynamically added here -->
+          </select>
+          <button id="confirmButton">Confirm</button>
+        </div>
+    </div>
     
     <script src="script.js"></script>
 </body>

@@ -187,3 +187,40 @@ $( function() {
     $( "#assistant-dialog-form" ).dialog( "open" );
 });
 
+
+// When a row in 'all names' is clicked
+$('.all-names-row').click(function() {
+    // Show the modal
+    $('#stationModal').show();
+    
+    // Get the clicked row
+    var row = $(this);
+    
+    // When the confirm button is clicked
+    $('#confirmButton').click(function() {
+      // Get the selected station
+      var station = $('#stationSelect').val();
+      
+      // Move the row to 'ordered names' and add the station
+      row.appendTo('#orderedNames');
+      row.append('<td>' + station + '</td>');
+      
+      // Hide the modal
+      $('#stationModal').hide();
+    });
+  });
+  
+  // When photographers are added
+  $('#addPhotographersButton').click(function() {
+    // Get the number of photographers
+    var numPhotographers = $('#photographersInput').val();
+    
+    // Clear the station select options
+    $('#stationSelect').empty();
+    
+    // Add the stations to the select options
+    for (var i = 1; i <= numPhotographers; i++) {
+      $('#stationSelect').append('<option value="' + i + '">Station ' + i + '</option>');
+    }
+  });
+  
