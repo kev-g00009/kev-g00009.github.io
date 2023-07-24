@@ -6,8 +6,9 @@ var ordering = false;
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
     var file = fileInput.files[0];
-
+    
     Papa.parse(file, {
+        header: true,
         complete: function(results) {
             allNames = results.data;
             names = allNames.slice();  // Copy the original list to the displayed list
@@ -90,9 +91,9 @@ function populateTable(tableId, namesArray) {
     }
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
-        for (var j = 0; j < namesArray[i].length; j++) {
+        for (var key in namesArray[i]) {
             var cell = document.createElement('td');
-            cell.textContent = namesArray[i][j];
+            cell.textContent = namesArray[i][key];
             row.appendChild(cell);
         }
         table.appendChild(row);
