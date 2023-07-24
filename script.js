@@ -93,11 +93,13 @@ function populateTable(tableId, namesArray, numbered = false) {
     while (table.firstChild) {
         table.firstChild.remove();
     }
+    var headerRow = document.createElement('tr');
     if (tableId === 'ordered-table') {  // Add a "Station" header to the ordered-table
-        var headerRow = document.createElement('tr');
-        headerRow.innerHTML = '<th>Station</th>';
-        table.appendChild(headerRow);
+        headerRow.innerHTML = '<th>Number</th><th>Name</th><th>Station</th>';
+    } else {
+        headerRow.innerHTML = '<th>Name</th>';
     }
+    table.appendChild(headerRow);
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         row.dataset.row = JSON.stringify(namesArray[i]);
