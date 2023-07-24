@@ -14,6 +14,12 @@ document.getElementById('upload-btn').addEventListener('click', function() {
         complete: function(results) {
             allNames = results.data;
             names = allNames.slice();  // Copy the original list to the displayed list
+
+            // Add a 'nameIndex' property to each name object
+            names.forEach((name, index) => {
+                name.nameIndex = index;
+            });
+
             populateTable('name-table', names);
         }
     });
@@ -26,20 +32,15 @@ document.getElementById('go-btn').addEventListener('click', function() {
     document.getElementById('go-btn').textContent = ordering ? 'Stop' : 'Go';
 });
 
+// Update the 'click' event listener on the 'name-table'
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        nameRow.originalIndex = names.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow));
-        names.splice(nameRow.originalIndex, 1);
+        names.splice(names.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
         orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
-
-        // Update the originalIndex property of each name in the orderedNames array
-        orderedNames.forEach(function(name, index) {
-            name.originalIndex = names.findIndex(n => JSON.stringify(n) === JSON.stringify(name));
-        });
     }
 });
 
@@ -48,7 +49,7 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
         orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
-        names.splice(nameRow.originalIndex, 0, nameRow);
+        names.splice(nameRow.nameIndex, 0, nameRow);  // Use 'nameIndex' instead of 'originalIndex'
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
     }
@@ -110,9 +111,12 @@ function populateTable(tableId, namesArray, numbered = false) {
         cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
         row.appendChild(cell);
         for (var key in namesArray[i]) {
-            cell = document.createElement('td');
-            cell.textContent = namesArray[i][key];
-            row.appendChild(cell);
+            // Don't create a column for the 'nameIndex' property
+            if (key !== 'nameIndex') {
+                cell = document.createElement('td');
+                cell.textContent = namesArray[i][key];
+                row.appendChild(cell);
+            }
         }
         table.appendChild(row);
     }
