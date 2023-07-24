@@ -3,6 +3,8 @@ var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
 
+var originalNames;  // Add this line to keep a copy of the original data
+
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
     var file = fileInput.files[0];
@@ -11,6 +13,7 @@ document.getElementById('upload-btn').addEventListener('click', function() {
         header: true,
         complete: function(results) {
             allNames = results.data;
+            originalNames = [...allNames];  // Make a copy of the original data
             names = allNames.slice();  // Copy the original list to the displayed list
             populateTable('name-table', names);
         }
@@ -60,13 +63,14 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === row.dataset.row), 1);
-        names.push(nameRow);
-        allNames.push(nameRow);
-        names.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
-        allNames.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
-        populateTable('name-table', names);
-        populateTable('ordered-table', orderedNames, true);
+        var originalIndex = originalNames.findIndex(n => JSON.stringify(n) === row.dataset.row);
+        if (window.confirm('Are you sure you want to move this name back to the "All Names" table?')) {
+            orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === row.dataset.row), 1);
+            allNames.splice(originalIndex, 0, nameRow);
+            names.splice(originalIndex, 0, nameRow);
+            populateTable('name-table', names);
+            populateTable('ordered-table', orderedNames, true);
+        }
     }
 });
 
@@ -90,7 +94,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
         return currentAssistantNumber + rowIndex + ', ' + Object.values(row).join(',');
-    }).join('\\n');
+    }).join('\\r\\n');
     var blob = new Blob([csv], {type: 'text/csv'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -99,6 +103,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     a.click();
     URL.revokeObjectURL(url);
 });
+
 
 
 document.getElementById('search-bar').addEventListener('input', function() {
