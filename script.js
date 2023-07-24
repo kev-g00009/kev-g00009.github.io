@@ -1,25 +1,9 @@
-
-// // At the beginning, check if we have any orderedNames saved
-// window.onload = function() {
-//     var savedNames = JSON.parse(localStorage.getItem('orderedNames'));
-//     if (savedNames) {
-//         orderedNames = savedNames;
-//         populateTable('ordered-table', orderedNames, true);
-//     }
-// };
-
-// window.onload = function() {
-//     orderedNames = [];
-//     localStorage.clear();  // Clear localStorage
-//     populateTable('ordered-table', orderedNames, true);
-// };
-
 var allNames;  // The original list of names
 var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
-var stations = [];  // The list of station numbers
-var selectedRow;  // Global variable for storing the selected row
+
+var originalNames;  // Add this line to keep a copy of the original data
 
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
@@ -35,6 +19,8 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     });
 });
 
+
+
 document.getElementById('go-btn').addEventListener('click', function() {
     ordering = !ordering;
     document.getElementById('go-btn').textContent = ordering ? 'Stop' : 'Go';
@@ -42,10 +28,15 @@ document.getElementById('go-btn').addEventListener('click', function() {
 
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
-        selectedRow = e.target.parentNode;
-        stationDialog.dialog('open');  // Open the station selection dialog
+        var row = e.target.parentNode;
+        var nameRow = JSON.parse(row.dataset.row);
+        names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+        orderedNames.push(nameRow);
+        populateTable('name-table', names);
+        populateTable('ordered-table', orderedNames, true);
     }
 });
+
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
@@ -62,6 +53,24 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
         }
     }
 });
+
+
+
+// // At the beginning, check if we have any orderedNames saved
+// window.onload = function() {
+//     var savedNames = JSON.parse(localStorage.getItem('orderedNames'));
+//     if (savedNames) {
+//         orderedNames = savedNames;
+//         populateTable('ordered-table', orderedNames, true);
+//     }
+// };
+
+// window.onload = function() {
+//     orderedNames = [];
+//     localStorage.clear();  // Clear localStorage
+//     populateTable('ordered-table', orderedNames, true);
+// };
+
 
 document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
@@ -83,6 +92,8 @@ document.getElementById('search-bar').addEventListener('input', function() {
     populateTable('name-table', names);
 });
 
+
+
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();  // Cancel the event
     e.returnValue = '';  // Chrome requires returnValue to be set
@@ -93,13 +104,6 @@ function populateTable(tableId, namesArray, numbered = false) {
     while (table.firstChild) {
         table.firstChild.remove();
     }
-    var headerRow = document.createElement('tr');
-    if (tableId === 'ordered-table') {  // Add a "Station" header to the ordered-table
-        headerRow.innerHTML = '<th>Number</th><th>Name</th><th>Station</th>';
-    } else {
-        headerRow.innerHTML = '<th>Name</th>';
-    }
-    table.appendChild(headerRow);
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         row.dataset.row = JSON.stringify(namesArray[i]);
@@ -118,8 +122,9 @@ function populateTable(tableId, namesArray, numbered = false) {
     }
 }
 
+
 $( function() {
-    var assistantDialog, photographerDialog, stationDialog,
+    var assistantDialog, photographerDialog,
     assistant = $( "#assistant" ),
     photographers = $( "#photographers" ),
     assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3', 'Assistant 4', 'Assistant 5', 'Assistant 6', 'Assistant 7', 'Assistant 8', 'Assistant 9'],
@@ -165,10 +170,6 @@ $( function() {
 
           // Update the title for the next station
           photographerDialog.dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
-
-          // Add a new station to the stations array
-          stations.push(`Station ${stationNumber}`);
-          stationNumber++;
         },
         "Done": function() {
             // Get the selected assistant's number
@@ -180,25 +181,6 @@ $( function() {
       open: function() {
         // Set the initial title
         $(this).dialog('option', 'title', `Choose a photographer for Station #${stationNumber}`);
-      }
-    });
-
-    stationDialog = $( "#station-dialog-form" ).dialog({
-      autoOpen: false,
-      modal: true,
-      buttons: {
-        "Confirm": function() {
-            var selectedStation = $('#stations-select').val();
-            stationDialog.dialog("close");
-
-            // Move the name to the orderedNames array and add the selected station
-            var nameRow = JSON.parse(selectedRow.dataset.row);
-            names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-            nameRow.Station = selectedStation;  // Add the selected station to the row
-            orderedNames.push(nameRow);
-            populateTable('name-table', names);
-            populateTable('ordered-table', orderedNames, true);
-        }
       }
     });
 
