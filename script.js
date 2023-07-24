@@ -35,6 +35,11 @@ document.getElementById('name-table').addEventListener('click', function(e) {
         orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
+
+        // Update the originalIndex property of each name in the orderedNames array
+        orderedNames.forEach(function(name, index) {
+            name.originalIndex = names.findIndex(n => JSON.stringify(n) === JSON.stringify(name));
+        });
     }
 });
 
@@ -69,7 +74,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
         return [currentAssistantNumber + rowIndex].concat(Object.values(row)).join(',');
-    }).join('\n');
+    }).join('\r\n');  // Use '\r\n' instead of '\n'
     var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -78,9 +83,6 @@ document.getElementById('download-btn').addEventListener('click', function() {
     a.click();
     URL.revokeObjectURL(url);
 });
-
-
-
 
 document.getElementById('search-bar').addEventListener('input', function() {
     var searchText = document.getElementById('search-bar').value;
