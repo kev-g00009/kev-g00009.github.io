@@ -1,12 +1,25 @@
+
+// // At the beginning, check if we have any orderedNames saved
+// window.onload = function() {
+//     var savedNames = JSON.parse(localStorage.getItem('orderedNames'));
+//     if (savedNames) {
+//         orderedNames = savedNames;
+//         populateTable('ordered-table', orderedNames, true);
+//     }
+// };
+
+// window.onload = function() {
+//     orderedNames = [];
+//     localStorage.clear();  // Clear localStorage
+//     populateTable('ordered-table', orderedNames, true);
+// };
+
 var allNames;  // The original list of names
 var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
-var numStations = 0;
 var stations = [];  // The list of station numbers
-
-
-var originalNames;  // Add this line to keep a copy of the original data
+var selectedRow;  // Global variable for storing the selected row
 
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
@@ -27,12 +40,9 @@ document.getElementById('go-btn').addEventListener('click', function() {
     document.getElementById('go-btn').textContent = ordering ? 'Stop' : 'Go';
 });
 
-
-var row;  // Declare row in the global scope
-
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
-        row = e.target.parentNode;  // Assign the clicked row to the global row variable
+        selectedRow = e.target.parentNode;
         stationDialog.dialog('open');  // Open the station selection dialog
     }
 });
@@ -53,24 +63,6 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     }
 });
 
-
-
-// // At the beginning, check if we have any orderedNames saved
-// window.onload = function() {
-//     var savedNames = JSON.parse(localStorage.getItem('orderedNames'));
-//     if (savedNames) {
-//         orderedNames = savedNames;
-//         populateTable('ordered-table', orderedNames, true);
-//     }
-// };
-
-// window.onload = function() {
-//     orderedNames = [];
-//     localStorage.clear();  // Clear localStorage
-//     populateTable('ordered-table', orderedNames, true);
-// };
-
-
 document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
@@ -90,8 +82,6 @@ document.getElementById('search-bar').addEventListener('input', function() {
     names = allNames.filter(name => JSON.stringify(name).toLowerCase().includes(searchText.toLowerCase()));
     populateTable('name-table', names);
 });
-
-
 
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();  // Cancel the event
@@ -125,7 +115,6 @@ function populateTable(tableId, namesArray, numbered = false) {
         table.appendChild(row);
     }
 }
-
 
 $( function() {
     var assistantDialog, photographerDialog, stationDialog,
@@ -193,22 +182,22 @@ $( function() {
     });
 
     stationDialog = $( "#station-dialog-form" ).dialog({
-        autoOpen: false,
-        modal: true,
-        buttons: {
-            "Confirm": function() {
-                var selectedStation = $('#stations-select').val();
-                stationDialog.dialog("close");
-    
-                // Move the name to the orderedNames array and add the selected station
-                var nameRow = JSON.parse(row.dataset.row);
-                names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-                nameRow.Station = selectedStation;  // Add the selected station to the row
-                orderedNames.push(nameRow);
-                populateTable('name-table', names);
-                populateTable('ordered-table', orderedNames, true);
-            }
+      autoOpen: false,
+      modal: true,
+      buttons: {
+        "Confirm": function() {
+            var selectedStation = $('#stations-select').val();
+            stationDialog.dialog("close");
+
+            // Move the name to the orderedNames array and add the selected station
+            var nameRow = JSON.parse(selectedRow.dataset.row);
+            names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+            nameRow.Station = selectedStation;  // Add the selected station to the row
+            orderedNames.push(nameRow);
+            populateTable('name-table', names);
+            populateTable('ordered-table', orderedNames, true);
         }
+      }
     });
 
     $( "#assistant-dialog-form" ).dialog( "open" );
