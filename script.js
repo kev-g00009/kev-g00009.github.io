@@ -42,8 +42,7 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        var confirmation = confirm("Are you sure you want to move '" + nameRow.Name + "' back to 'All Names'?");
-        if (confirmation) {
+        if (window.confirm("Are you sure you want to move '" + nameRow.Name + "' back to 'All Names'?")) {
             orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
             names.push(nameRow);
             names.sort((a, b) => a.originalIndex - b.originalIndex);  // Sort the names based on their original index
@@ -126,8 +125,8 @@ $( function() {
     var assistantDialog, photographerDialog,
     assistant = $( "#assistant" ),
     photographers = $( "#photographers" ),
-    assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3'],
-    photographerNames = ['John', 'Photographer 2', 'Photographer 3'],
+    assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3', 'Assistant 4', 'Assistant 5', 'Assistant 6', 'Assistant 7', 'Assistant 8', 'Assistant 9'],
+    photographerNames = ['Photographer 1', 'Photographer 2', 'Photographer 3', 'Photographer 4', 'Photographer 5', 'Photographer 6', 'Photographer 7', 'Photographer 8', 'Photographer 9'],
     selectedAssistant = "",
     selectedPhotographers = [],
     stationNumber = 1;
