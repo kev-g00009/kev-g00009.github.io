@@ -13,7 +13,6 @@ document.getElementById('upload-btn').addEventListener('click', function() {
         header: true,
         complete: function(results) {
             allNames = results.data;
-            originalNames = [...allNames];  // Make a copy of the original data
             names = allNames.slice();  // Copy the original list to the displayed list
             populateTable('name-table', names);
         }
@@ -51,8 +50,9 @@ document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        names.splice(names.findIndex(n => JSON.stringify(n) === row.dataset.row), 1);
-        allNames.splice(allNames.findIndex(n => JSON.stringify(n) === row.dataset.row), 1);
+        var originalIndex = allNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow));
+        names.splice(names.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
+        nameRow.originalIndex = originalIndex;
         orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
@@ -63,14 +63,13 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        var originalIndex = originalNames.findIndex(n => JSON.stringify(n) === row.dataset.row);
-        if (window.confirm('Are you sure you want to move this name back to the "All Names" table?')) {
-            orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === row.dataset.row), 1);
-            allNames.splice(originalIndex, 0, nameRow);
-            names.splice(originalIndex, 0, nameRow);
-            populateTable('name-table', names);
-            populateTable('ordered-table', orderedNames, true);
-        }
+        var originalIndex = nameRow.originalIndex;
+        orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
+        delete nameRow.originalIndex;
+        allNames.splice(originalIndex, 0, nameRow);
+        names.splice(originalIndex, 0, nameRow);
+        populateTable('name-table', names);
+        populateTable('ordered-table', orderedNames, true);
     }
 });
 
@@ -93,7 +92,7 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
 document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
-        return currentAssistantNumber + rowIndex + ', ' + Object.values(row).join(',');
+        return [currentAssistantNumber + rowIndex].concat(Object.values(row)).join(',');
     }).join('\\r\\n');
     var blob = new Blob([csv], {type: 'text/csv'});
     var url = URL.createObjectURL(blob);
@@ -103,6 +102,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     a.click();
     URL.revokeObjectURL(url);
 });
+
 
 
 
