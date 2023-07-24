@@ -25,29 +25,27 @@ document.getElementById('go-btn').addEventListener('click', function() {
 
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
-        var name = e.target.textContent;
-        names.splice(names.indexOf(name), 1);
-        allNames.splice(allNames.indexOf(name), 1);  // Also remove the name from allNames
-        orderedNames.push(name);
+        var row = e.target.parentNode;
+        var rowIndex = Array.prototype.indexOf.call(row.parentNode.children, row);
+        var nameRow = names.splice(rowIndex, 1)[0];
+        allNames.splice(allNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
+        orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
-        // localStorage.setItem('orderedNames', JSON.stringify(orderedNames));  // Save orderedNames to localStorage
     }
 });
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
-        var name = e.target.textContent.split('. ')[1];
-        if (window.confirm('Are you sure you want to put back the name ' + name + '?')) {
-            orderedNames.splice(orderedNames.indexOf(name), 1);
-            names.push(name);
-            allNames.push(name);  // Also add the name back to allNames
-            names.sort();
-            allNames.sort();  // Sort allNames to maintain the alphabetical order
-            populateTable('name-table', names);
-            populateTable('ordered-table', orderedNames, true);
-            // localStorage.setItem('orderedNames', JSON.stringify(orderedNames));  // Save orderedNames to localStorage
-        }
+        var row = e.target.parentNode;
+        var rowIndex = Array.prototype.indexOf.call(row.parentNode.children, row);
+        var nameRow = orderedNames.splice(rowIndex, 1)[0];
+        names.push(nameRow);
+        allNames.push(nameRow);
+        names.sort();
+        allNames.sort();
+        populateTable('name-table', names);
+        populateTable('ordered-table', orderedNames, true);
     }
 });
 
