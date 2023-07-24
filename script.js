@@ -6,16 +6,14 @@ var ordering = false;
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
     var file = fileInput.files[0];
-    var reader = new FileReader();
 
-    reader.onload = function(e) {
-        var text = reader.result;
-        allNames = text.split('\\n').map(row => row.split(','));
-        names = allNames.slice();  // Copy the original list to the displayed list
-        populateTable('name-table', names);
-    };
-
-    reader.readAsText(file);
+    Papa.parse(file, {
+        complete: function(results) {
+            allNames = results.data;
+            names = allNames.slice();  // Copy the original list to the displayed list
+            populateTable('name-table', names);
+        }
+    });
 });
 
 
