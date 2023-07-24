@@ -30,12 +30,13 @@ document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        names.splice(names.findIndex(n => n.Name === nameRow.Name), 1);
+        names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
         orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
     }
 });
+
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
