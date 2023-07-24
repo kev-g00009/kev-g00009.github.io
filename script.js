@@ -19,26 +19,6 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     });
 });
 
-function populateTable(tableId, namesArray, numbered = false) {
-    var table = document.getElementById(tableId);
-    while (table.firstChild) {
-        table.firstChild.remove();
-    }
-    for (var i = 0; i < namesArray.length; i++) {
-        var row = document.createElement('tr');
-        row.dataset.row = JSON.stringify(namesArray[i]);
-        var cell = document.createElement('td');
-        var rowIndex = (i + 1).toString().padStart(3, '0');
-        cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
-        row.appendChild(cell);
-        for (var key in namesArray[i]) {
-            cell = document.createElement('td');
-            cell.textContent = namesArray[i][key];
-            row.appendChild(cell);
-        }
-        table.appendChild(row);
-    }
-}
 
 
 document.getElementById('go-btn').addEventListener('click', function() {
@@ -50,9 +30,8 @@ document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        var originalIndex = allNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow));
-        names.splice(names.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
-        nameRow.originalIndex = originalIndex;
+        nameRow.originalIndex = names.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow));
+        names.splice(nameRow.originalIndex, 1);
         orderedNames.push(nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
@@ -63,11 +42,8 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
-        var originalIndex = nameRow.originalIndex;
         orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
-        delete nameRow.originalIndex;
-        allNames.splice(originalIndex, 0, nameRow);
-        names.splice(originalIndex, 0, nameRow);
+        names.splice(nameRow.originalIndex, 0, nameRow);
         populateTable('name-table', names);
         populateTable('ordered-table', orderedNames, true);
     }
@@ -93,8 +69,8 @@ document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
         return [currentAssistantNumber + rowIndex].concat(Object.values(row)).join(',');
-    }).join('\\r\\n');
-    var blob = new Blob([csv], {type: 'text/csv'});
+    }).join('\n');
+    var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
@@ -118,6 +94,27 @@ window.addEventListener('beforeunload', function (e) {
     e.preventDefault();  // Cancel the event
     e.returnValue = '';  // Chrome requires returnValue to be set
 });
+
+function populateTable(tableId, namesArray, numbered = false) {
+    var table = document.getElementById(tableId);
+    while (table.firstChild) {
+        table.firstChild.remove();
+    }
+    for (var i = 0; i < namesArray.length; i++) {
+        var row = document.createElement('tr');
+        row.dataset.row = JSON.stringify(namesArray[i]);
+        var cell = document.createElement('td');
+        var rowIndex = (i + 1).toString().padStart(3, '0');
+        cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
+        row.appendChild(cell);
+        for (var key in namesArray[i]) {
+            cell = document.createElement('td');
+            cell.textContent = namesArray[i][key];
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+    }
+}
 
 $( function() {
     var assistantDialog, photographerDialog,
@@ -182,3 +179,4 @@ $( function() {
 
     $( "#assistant-dialog-form" ).dialog( "open" );
 });
+
