@@ -8,19 +8,21 @@ var originalNames;  // Add this line to keep a copy of the original data
 document.getElementById('upload-btn').addEventListener('click', function() {
     var fileInput = document.getElementById('file-upload');
     var file = fileInput.files[0];
-    var reader = new FileReader();
+    
+    Papa.parse(file, {
+        header: true,
+        complete: function(results) {
+            allNames = results.data;
+            names = allNames.slice();  // Copy the original list to the displayed list
 
-    reader.onload = function(e) {
-        var text = reader.result;
-        allNames = text.split('\\n');
-        allNames.sort();
-        names = allNames.slice();  // Copy the original list to the displayed list
+            // Add a 'nameIndex' property to each name object
+            names.forEach((name, index) => {
+                name.nameIndex = index;
+            });
 
-        originalNames = allNames.slice();  // Copy allNames to originalNames
-        populateTable('name-table', names);
-    };
-
-    reader.readAsText(file);
+            populateTable('name-table', names);
+        }
+    });
 });
 
 
@@ -44,19 +46,12 @@ document.getElementById('name-table').addEventListener('click', function(e) {
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
-        var name = e.target.textContent.split('. ')[1];
-        if (window.confirm('Are you sure you want to put back the name ' + name + '?')) {
-            orderedNames.splice(orderedNames.indexOf(name), 1);
-
-            // Find the original index of the name and insert it at the same index in allNames
-            var originalIndex = originalNames.indexOf(name);
-            allNames.splice(originalIndex, 0, name);
-
-            names.push(name);
-            names.sort();
-            populateTable('name-table', names);
-            populateTable('ordered-table', orderedNames, true);
-        }
+        var row = e.target.parentNode;
+        var nameRow = JSON.parse(row.dataset.row);
+        orderedNames.splice(orderedNames.findIndex(n => JSON.stringify(n) === JSON.stringify(nameRow)), 1);
+        names.splice(nameRow.nameIndex, 0, nameRow);  // Use 'nameIndex' instead of 'originalIndex'
+        populateTable('name-table', names);
+        populateTable('ordered-table', orderedNames, true);
     }
 });
 
@@ -114,9 +109,8 @@ function populateTable(tableId, namesArray, numbered = false) {
         var cell = document.createElement('td');
         var rowIndex = (i + 1).toString().padStart(3, '0');
         cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
-        row.appendChild(cell);
+        if(numbered) row.appendChild(cell);  // only add this cell if table is numbered
         for (var key in namesArray[i]) {
-            // Don't create a column for the 'nameIndex' property
             if (key !== 'nameIndex') {
                 cell = document.createElement('td');
                 cell.textContent = namesArray[i][key];
@@ -126,6 +120,7 @@ function populateTable(tableId, namesArray, numbered = false) {
         table.appendChild(row);
     }
 }
+
 
 $( function() {
     var assistantDialog, photographerDialog,
