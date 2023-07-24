@@ -44,29 +44,29 @@ document.getElementById('name-table').addEventListener('click', function(e) {
           buttons: {
             "Done": function() {
               // Get the selected station
-              var selectedStation = $('#stations option:selected').val();
-  
+              var selectedStation = $('#station-select option:selected').val();
+      
               // Add the station to the nameRow object
               nameRow.station = selectedStation;
-  
+      
               names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
               filteredNames.splice(filteredNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
               orderedNames.push(nameRow);
               populateTable('name-table', filteredNames);
               populateTable('ordered-table', orderedNames, true);
-  
+      
               stationDialog.dialog("close");
             }
           }
         });
-  
+      
         // Populate the select options with the stations
-        var select = $('#stations');
+        var select = $('#station-select');
         select.empty();
         stations.forEach(function(station) {
           select.append($('<option></option>').val(station).html(station));
         });
-  
+      
         stationDialog.dialog("open");
       });
     }
