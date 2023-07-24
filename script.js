@@ -26,9 +26,11 @@ document.getElementById('go-btn').addEventListener('click', function() {
 });
 
 
+var row;  // Declare row in the global scope
+
 document.getElementById('name-table').addEventListener('click', function(e) {
     if (ordering && e.target && e.target.nodeName == "TD") {
-        var row = e.target.parentNode;
+        row = e.target.parentNode;  // Assign the clicked row to the global row variable
         stationDialog.dialog('open');  // Open the station selection dialog
     }
 });
@@ -189,22 +191,22 @@ $( function() {
     });
 
     stationDialog = $( "#station-dialog-form" ).dialog({
-      autoOpen: false,
-      modal: true,
-      buttons: {
-        "Confirm": function() {
-            var selectedStation = $('#stations-select').val();
-            stationDialog.dialog("close");
-
-            // Move the name to the orderedNames array and add the selected station
-            var nameRow = JSON.parse(row.dataset.row);
-            names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-            nameRow.Station = selectedStation;  // Add the selected station to the row
-            orderedNames.push(nameRow);
-            populateTable('name-table', names);
-            populateTable('ordered-table', orderedNames, true);
+        autoOpen: false,
+        modal: true,
+        buttons: {
+            "Confirm": function() {
+                var selectedStation = $('#stations-select').val();
+                stationDialog.dialog("close");
+    
+                // Move the name to the orderedNames array and add the selected station
+                var nameRow = JSON.parse(row.dataset.row);
+                names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+                nameRow.Station = selectedStation;  // Add the selected station to the row
+                orderedNames.push(nameRow);
+                populateTable('name-table', names);
+                populateTable('ordered-table', orderedNames, true);
+            }
         }
-      }
     });
 
     $( "#assistant-dialog-form" ).dialog( "open" );
