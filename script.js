@@ -2,6 +2,8 @@ var allNames;  // The original list of names
 var names;  // The currently displayed names
 var orderedNames = [];
 var ordering = false;
+var filteredNames;
+
 
 var originalNames;  // Add this line to keep a copy of the original data
 
@@ -13,8 +15,9 @@ document.getElementById('upload-btn').addEventListener('click', function() {
         header: true,
         complete: function(results) {
             allNames = results.data.map((row, index) => ({...row, originalIndex: index}));
-            names = [...allNames];  // Make a copy of the allNames array
-            populateTable('name-table', names);
+            names = [...allNames]; 
+            filteredNames = [...allNames];  // Copy of the allNames array for search functionality
+            populateTable('name-table', filteredNames);
         }
     });
 });
@@ -31,12 +34,12 @@ document.getElementById('name-table').addEventListener('click', function(e) {
         var row = e.target.parentNode;
         var nameRow = JSON.parse(row.dataset.row);
         names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+        filteredNames.splice(filteredNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
         orderedNames.push(nameRow);
-        populateTable('name-table', names);
+        populateTable('name-table', filteredNames);
         populateTable('ordered-table', orderedNames, true);
     }
 });
-
 
 document.getElementById('ordered-table').addEventListener('click', function(e) {
     if (e.target && e.target.nodeName == "TD") {
@@ -47,8 +50,9 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
         if (window.confirm("Are you sure you want to move '" + currentAssistantNumber + rowIndex + "' back to 'All Names'?")) {
             orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
             names.push(nameRow);
-            names.sort((a, b) => a.originalIndex - b.originalIndex);  // Sort the names based on their original index
-            populateTable('name-table', names);
+            filteredNames = names;
+            names.sort((a, b) => a.originalIndex - b.originalIndex);  
+            populateTable('name-table', filteredNames);
             populateTable('ordered-table', orderedNames, true);
         }
     }
@@ -76,7 +80,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
         return [currentAssistantNumber + rowIndex].concat(Object.values(row)).join(',');
-    }).join('\r\n');  // Use '\r\n' instead of '\n'
+    }).join('\r\n');  
     var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -88,8 +92,8 @@ document.getElementById('download-btn').addEventListener('click', function() {
 
 document.getElementById('search-bar').addEventListener('input', function() {
     var searchText = document.getElementById('search-bar').value;
-    names = allNames.filter(name => JSON.stringify(name).toLowerCase().includes(searchText.toLowerCase()));
-    populateTable('name-table', names);
+    filteredNames = names.filter(name => JSON.stringify(name).toLowerCase().includes(searchText.toLowerCase()));
+    populateTable('name-table', filteredNames);
 });
 
 
@@ -110,9 +114,9 @@ function populateTable(tableId, namesArray, numbered = false) {
         var cell = document.createElement('td');
         var rowIndex = (i + 1).toString().padStart(3, '0');
         cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
-        if(numbered) row.appendChild(cell);  // only add this cell if table is numbered
+        if(numbered) row.appendChild(cell);  
         for (var key in namesArray[i]) {
-            if (key !== 'originalIndex') {  // Don't create a column for the 'originalIndex' property
+            if (key !== 'originalIndex') {  
                 cell = document.createElement('td');
                 cell.textContent = namesArray[i][key];
                 row.appendChild(cell);
