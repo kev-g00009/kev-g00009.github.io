@@ -11,7 +11,6 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     reader.onload = function(e) {
         var text = reader.result;
         allNames = text.split('\\n').map(row => row.split(','));
-        allNames.sort();
         names = allNames.slice();  // Copy the original list to the displayed list
         populateTable('name-table', names);
     };
@@ -86,20 +85,20 @@ document.getElementById('search-bar').addEventListener('input', function() {
     populateTable('name-table', names);
 });
 
-function populateTable(tableId, namesArray, numbered=false) {
+function populateTable(tableId, namesArray) {
     var table = document.getElementById(tableId);
     while (table.firstChild) {
         table.firstChild.remove();
     }
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
-        var cell = document.createElement('td');
-        var rowIndex = (i + 1).toString().padStart(3, '0');
-        cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' + namesArray[i] : namesArray[i];
-        row.appendChild(cell);
+        for (var j = 0; j < namesArray[i].length; j++) {
+            var cell = document.createElement('td');
+            cell.textContent = namesArray[i][j];
+            row.appendChild(cell);
+        }
         table.appendChild(row);
     }
-    
 }
 
 window.addEventListener('beforeunload', function (e) {
