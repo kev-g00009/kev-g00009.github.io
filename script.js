@@ -25,14 +25,18 @@ function populateTable(tableId, namesArray) {
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         row.dataset.row = JSON.stringify(namesArray[i]);
+        var cell = document.createElement('td');
+        cell.textContent = (i + 1) + '.';
+        row.appendChild(cell);
         for (var key in namesArray[i]) {
-            var cell = document.createElement('td');
+            cell = document.createElement('td');
             cell.textContent = namesArray[i][key];
             row.appendChild(cell);
         }
         table.appendChild(row);
     }
 }
+
 
 document.getElementById('go-btn').addEventListener('click', function() {
     ordering = !ordering;
@@ -82,7 +86,7 @@ document.getElementById('ordered-table').addEventListener('click', function(e) {
 
 
 document.getElementById('download-btn').addEventListener('click', function() {
-    var csv = orderedNames.map((name, i) => (i + 1) + '. ' + name).join('\n');
+    var csv = orderedNames.map((row, i) => (i + 1) + ', ' + Object.values(row).join(',')).join('\\n');
     var blob = new Blob([csv], {type: 'text/csv'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
@@ -91,6 +95,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     a.click();
     URL.revokeObjectURL(url);
 });
+
 
 document.getElementById('search-bar').addEventListener('input', function() {
     var searchText = document.getElementById('search-bar').value;
