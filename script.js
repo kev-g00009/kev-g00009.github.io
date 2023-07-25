@@ -52,44 +52,32 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 // Add the station to the nameRow object
                 nameRow.station = selectedStation;
               
-                // Access the camera
-                navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                  // Set the video source to the camera stream
-                  var video = document.createElement('video');
-                  video.srcObject = stream;
-                  video.play();
-                  
-                  // Create a Capture button
-                  var captureButton = document.createElement('button');
-                  captureButton.textContent = 'Capture';
-                  captureButton.addEventListener('click', function() {
-                    // Capture the image when the Capture button is clicked
-                    var canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    var context = canvas.getContext('2d');
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    var dataUrl = canvas.toDataURL('image/jpeg');  // Capture the image as a JPEG
+                // Get the camera input element
+                var cameraInput = document.getElementById('camera-input');
+                
+                // Trigger the camera input when the Done button is clicked
+                cameraInput.click();
+              
+                // When a picture is taken
+                cameraInput.onchange = function(event) {
+                  // Get the picture file
+                  var file = event.target.files[0];
+                  var reader = new FileReader();
+              
+                  reader.onloadend = function() {
+                    // Get the data URL of the picture
+                    var dataUrl = reader.result;
               
                     // Now you can store the dataUrl in your nameRow object and update your table
                     nameRow.image = dataUrl;
                     populateTable('ordered-table', orderedNames, true);
+                  }
               
-                    // Stop the camera stream and hide the video feed and Capture button
-                    video.srcObject.getTracks().forEach(track => track.stop());
-                    video.style.display = 'none';
-                    captureButton.style.display = 'none';
-                  });
-              
-                  // Add the video element and Capture button to the page
-                  var videoContainer = document.getElementById('video-container');
-                  videoContainer.appendChild(video);
-                  videoContainer.appendChild(captureButton);
-                })
-                .catch(function(error) {
-                  console.log("Error accessing the camera: ", error);
-                });
+                  if (file) {
+                    // Read the picture file as a data URL
+                    reader.readAsDataURL(file);
+                  }
+                };
               
                 names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
                 filteredNames.splice(filteredNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
@@ -98,7 +86,7 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 populateTable('ordered-table', orderedNames, true);
               
                 stationDialog.dialog("close");
-              }              
+              }                        
           }
         });
       
