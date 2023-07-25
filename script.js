@@ -111,6 +111,7 @@ document.getElementById('name-table').addEventListener('click', function(e) {
       if (window.confirm("Are you sure you want to move '" + currentAssistantNumber + rowIndex + "' back to 'All Names'?")) {
         orderedNames.splice(orderedNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
         delete nameRow.station;  // Remove the 'station' property
+        delete nameRow.image;  // Remove the image property
         names.push(nameRow);
         filteredNames = names;
         names.sort((a, b) => a.originalIndex - b.originalIndex);
