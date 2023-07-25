@@ -175,18 +175,19 @@ function populateTable(tableId, namesArray, includeStation = false, numbered = f
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         row.dataset.row = JSON.stringify(namesArray[i]);
-        var cell = document.createElement('td');
-        var rowIndex = (i + 1).toString().padStart(3, '0');
-        cell.textContent = numbered ? currentAssistantNumber + rowIndex + '. ' : '';
-        if(numbered) row.appendChild(cell);  
+        if (numbered) {  // Add a cell with the assistant number if the 'numbered' parameter is true
+            var numberCell = document.createElement('td');
+            numberCell.textContent = currentAssistantNumber + (i + 1).toString().padStart(3, '0') + '. ';
+            row.appendChild(numberCell);
+        }
         for (var key in namesArray[i]) {
-            if (key !== 'originalIndex' && (includeStation || key !== 'station')) {  
-                cell = document.createElement('td');
-                if (key === 'image' && namesArray[i][key]) {  // If the key is 'image' and there is an image data URL
-                    var img = document.createElement('img');  // Create a new img element
-                    img.src = namesArray[i][key];  // Set the src attribute to the image data URL
-                    img.height = 100;  // Set the height of the image (you can change this to suit your needs)
-                    cell.appendChild(img);  // Add the img element to the cell
+            if (key !== 'originalIndex' && (includeStation || key !== 'station')) {
+                var cell = document.createElement('td');
+                if (key === 'image' && namesArray[i][key]) {
+                    var img = document.createElement('img');
+                    img.src = namesArray[i][key];
+                    img.height = 100;
+                    cell.appendChild(img);
                 } else {
                     cell.textContent = namesArray[i][key];
                 }
@@ -196,6 +197,7 @@ function populateTable(tableId, namesArray, includeStation = false, numbered = f
         table.appendChild(row);
     }
 }
+
 
 
 
