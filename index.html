@@ -74,35 +74,39 @@
     <div id="container">
         
 
-        <div id="rest-of-content" style="display: grid; grid-template-columns: auto 1fr; gap: 20px;">
-            <div id="configuration">
+        <div id="rest-of-content" style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+            <div id="configuration" style="max-width: 300px;">
                 <h2>Current Configuration:</h2>
                 <p id="assistantDisplay">Assistant: </p>
                 <div id="stations"></div>
             </div>
 
-            <div id="content" style="text-align: center; margin: auto; padding: 20px;">
-                <h1>Name Ordering(beta)</h1>
-                <input type="file" id="file-upload" accept=".csv">
-                <button id="upload-btn">Upload Names</button>
-                <h3>Don't Forget to Click Go!</h3>
-                <button id="go-btn">Go</button>
-                <div id="table-titles">
-                    <h2>All Names</h2>
-                    <button id="download-btn">Download Ordered Names</button>
-                    <h2>Ordered Names</h2>
-                </div>
-                <div id="tables">
-                    <div id="all-names">
-                        <input type="text" id="search-bar" placeholder="Search names">
-                        <table id="name-table">
-                            <!-- This is where the names will be inserted -->
-                        </table>
+            <div id="content" style="text-align: center; margin: auto;">
+                <div style="padding-bottom: 20px;">
+                    <h1>Name Ordering(beta)</h1>
+                    <input type="file" id="file-upload" accept=".csv">
+                    <button id="upload-btn">Upload Names</button>
+
+                    <h3>Don't Forget to Click Go!</h3>
+                    <button id="go-btn">Go</button>
+
+                    <div id="table-titles">
+                        <h2>All Names</h2>
+                        <button id="download-btn">Download Ordered Names</button>
+                        <h2>Ordered Names</h2>
                     </div>
-                    <div id="ordered-names">
-                        <table id="ordered-table">
-                            <!-- Ordered names will be inserted here -->
-                        </table>
+                    <div id="tables">
+                        <div id="all-names">
+                            <input type="text" id="search-bar" placeholder="Search names">
+                            <table id="name-table">
+                                <!-- This is where the names will be inserted -->
+                            </table>
+                        </div>
+                        <div id="ordered-names">
+                            <table id="ordered-table">
+                                <!-- Ordered names will be inserted here -->
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
