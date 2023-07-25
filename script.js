@@ -46,50 +46,52 @@ document.getElementById('name-table').addEventListener('click', function(e) {
           },
           buttons: {
             "Done": function() {
-              // Get the selected station
-              var selectedStation = $('#station-select option:selected').val();
-      
-              // Add the station to the nameRow object
-              nameRow.station = selectedStation;
-            
-              // Access the camera
-              navigator.mediaDevices.getUserMedia({ video: true })
-              .then(function(stream) {
-              // Set the video source to the camera stream
-              var video = document.createElement('video');
-              video.srcObject = stream;
-              video.play();
+                // Get the selected station
+                var selectedStation = $('#station-select option:selected').val();
                 
-                // Capture the image when the video is clicked
-                video.addEventListener('click', function() {
+                // Add the station to the nameRow object
+                nameRow.station = selectedStation;
+              
+                // Access the camera and capture the image when the video is clicked
+                navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                  // Set the video source to the camera stream
+                  var video = document.createElement('video');
+                  video.srcObject = stream;
+                  video.play();
+              
+                  // Capture the image immediately when the video is ready
+                  video.onloadedmetadata = function() {
                     var canvas = document.createElement('canvas');
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     var context = canvas.getContext('2d');
                     context.drawImage(video, 0, 0, canvas.width, canvas.height);
                     var dataUrl = canvas.toDataURL('image/jpeg');  // Capture the image as a JPEG
-
+              
                     // Now you can store the dataUrl in your nameRow object and update your table
                     nameRow.image = dataUrl;
                     populateTable('ordered-table', orderedNames, true);
-                });
-
-                // Add the video element to the page (you may want to create a specific container for it)
-                document.body.appendChild(video);
+                    
+                    // Stop the camera stream when you're done
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                  };
+              
+                  // Add the video element to the page (you may want to create a specific container for it)
+                  document.body.appendChild(video);
                 })
                 .catch(function(error) {
-                    console.log("Error accessing the camera: ", error);
+                  console.log("Error accessing the camera: ", error);
                 });
-
-
-              names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-              filteredNames.splice(filteredNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
-              orderedNames.push(nameRow);
-              populateTable('name-table', filteredNames);
-              populateTable('ordered-table', orderedNames, true);
-      
-              stationDialog.dialog("close");
-            }
+              
+                names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+                filteredNames.splice(filteredNames.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
+                orderedNames.push(nameRow);
+                populateTable('name-table', filteredNames);
+                populateTable('ordered-table', orderedNames, true);
+              
+                stationDialog.dialog("close");
+              }              
           }
         });
       
