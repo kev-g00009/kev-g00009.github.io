@@ -52,16 +52,19 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 // Add the station to the nameRow object
                 nameRow.station = selectedStation;
               
-                // Access the camera and capture the image when the video is clicked
+                // Access the camera
                 navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function(stream) {
                   // Set the video source to the camera stream
                   var video = document.createElement('video');
                   video.srcObject = stream;
                   video.play();
-              
-                  // Capture the image immediately when the video is ready
-                  video.onloadedmetadata = function() {
+                  
+                  // Create a Capture button
+                  var captureButton = document.createElement('button');
+                  captureButton.textContent = 'Capture';
+                  captureButton.addEventListener('click', function() {
+                    // Capture the image when the Capture button is clicked
                     var canvas = document.createElement('canvas');
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
@@ -72,17 +75,17 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                     // Now you can store the dataUrl in your nameRow object and update your table
                     nameRow.image = dataUrl;
                     populateTable('ordered-table', orderedNames, true);
-                    
-                    // Stop the camera stream when you're done
-                    video.srcObject.getTracks().forEach(track => track.stop());
-                  };
               
-                  // Add the video element to the page (you may want to create a specific container for it)
-                  document.body.appendChild(video);
-                  // Add the video element to the page
+                    // Stop the camera stream and hide the video feed and Capture button
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    video.style.display = 'none';
+                    captureButton.style.display = 'none';
+                  });
+              
+                  // Add the video element and Capture button to the page
                   var videoContainer = document.getElementById('video-container');
                   videoContainer.appendChild(video);
-
+                  videoContainer.appendChild(captureButton);
                 })
                 .catch(function(error) {
                   console.log("Error accessing the camera: ", error);
