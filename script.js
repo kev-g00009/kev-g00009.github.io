@@ -79,6 +79,10 @@ document.getElementById('name-table').addEventListener('click', function(e) {
               
                   // Add the video element to the page (you may want to create a specific container for it)
                   document.body.appendChild(video);
+                  // Add the video element to the page
+                  var videoContainer = document.getElementById('video-container');
+                  videoContainer.appendChild(video);
+
                 })
                 .catch(function(error) {
                   console.log("Error accessing the camera: ", error);
