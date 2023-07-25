@@ -167,7 +167,7 @@ window.addEventListener('beforeunload', function (e) {
     e.returnValue = '';  // Chrome requires returnValue to be set
 });
 
-function populateTable(tableId, namesArray, includeStation = false, numbered = false) {
+function populateTable(tableId, namesArray, includeStation = false) {
     var table = document.getElementById(tableId);
     while (table.firstChild) {
         table.firstChild.remove();
@@ -175,14 +175,14 @@ function populateTable(tableId, namesArray, includeStation = false, numbered = f
     for (var i = 0; i < namesArray.length; i++) {
         var row = document.createElement('tr');
         row.dataset.row = JSON.stringify(namesArray[i]);
-        if (numbered) {  // Add a cell with the assistant number if the 'numbered' parameter is true
-            var numberCell = document.createElement('td');
-            numberCell.textContent = currentAssistantNumber + (i + 1).toString().padStart(3, '0') + '. ';
-            row.appendChild(numberCell);
+        var cell = document.createElement('td');
+        if (tableId === 'ordered-table') {  // Add the assistant number if the table is 'ordered-table'
+            cell.textContent = currentAssistantNumber + (i + 1).toString().padStart(3, '0') + '. ';
         }
+        row.appendChild(cell);
         for (var key in namesArray[i]) {
             if (key !== 'originalIndex' && (includeStation || key !== 'station')) {
-                var cell = document.createElement('td');
+                cell = document.createElement('td');
                 if (key === 'image' && namesArray[i][key]) {
                     var img = document.createElement('img');
                     img.src = namesArray[i][key];
@@ -197,6 +197,7 @@ function populateTable(tableId, namesArray, includeStation = false, numbered = f
         table.appendChild(row);
     }
 }
+
 
 
 
