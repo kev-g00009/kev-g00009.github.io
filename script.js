@@ -51,10 +51,9 @@ document.getElementById('name-table').addEventListener('click', function(e) {
             "Done": function() {
                 // Get the selected station
                 var selectedStation = $('#station-select option:selected').val();
-                var photographerName = selectedPhotographers[selectedStation-1];
+
                 // Add the station to the nameRow object
-                // nameRow.station = selectedStation;
-                nameRow.station = selectedStation + ' (Photographer ' + photographerName + ')';
+                nameRow.station = selectedStation;
 
                 // Get the camera input element
                 var cameraInput = document.getElementById('camera-input');
@@ -177,29 +176,29 @@ function populateTable(tableId, namesArray, includeStation = false) {
         table.firstChild.remove();
     }
     for (var i = 0; i < namesArray.length; i++) {
-        var row = document.createElement('tr');
-        row.dataset.row = JSON.stringify(namesArray[i]);
-        var cell = document.createElement('td');
-        if (tableId === 'ordered-table') {  // Add the assistant number if the table is 'ordered-table'
-            cell.textContent = currentAssistantNumber + (i + 1).toString().padStart(3, '0') + '. ';
-        }
-        row.appendChild(cell);
-        for (var key in namesArray[i]) {
-            if (key !== 'originalIndex' && (includeStation || key !== 'station')) {
-                cell = document.createElement('td');
-                if (key === 'image' && namesArray[i][key]) {
-                    var img = document.createElement('img');
-                    img.src = namesArray[i][key];
-                    img.height = 100;
-                    cell.appendChild(img);
-                } else {
-                    cell.textContent = namesArray[i][key];
-                }
-                row.appendChild(cell);
-            }
-        }
-        table.appendChild(row);
-    }
+      var row = document.createElement('tr');
+      row.dataset.row = JSON.stringify(namesArray[i]);
+      var cell = document.createElement('td');
+      if (tableId === 'ordered-table') {  // Add the assistant number if the table is 'ordered-table'
+          cell.textContent = currentAssistantNumber + (i + 1).toString().padStart(3, '0') + '. ';
+      }
+      row.appendChild(cell);
+      for (var key in namesArray[i]) {
+          if (key !== 'originalIndex' && (includeStation || key !== 'station')) {
+              cell = document.createElement('td');
+              if (key === 'image' && namesArray[i][key]) {
+                  var img = document.createElement('img');
+                  img.src = namesArray[i][key];
+                  img.height = 100;
+                  cell.appendChild(img);
+              } else {
+                  cell.textContent = namesArray[i][key];
+              }
+              row.appendChild(cell);
+          }
+      }
+      table.appendChild(row);
+  }
 }
 
 
