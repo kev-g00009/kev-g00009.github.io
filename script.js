@@ -52,6 +52,14 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 // Get the selected station
                 var selectedStation = $('#station-select option:selected').val();
 
+                var stationNumber = selectedStation.replace('Station ', '');
+
+                // Get the corresponding photographer's name
+                var photographerName = selectedPhotographers[stationNumber - 1];
+
+                // Include the photographer's name with the station number
+                selectedStation = 'Station ' + stationNumber + ' (Photographer ' + photographerName + ')';
+
                 // Add the station to the nameRow object
                 nameRow.station = selectedStation;
 
