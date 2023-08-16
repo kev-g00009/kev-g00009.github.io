@@ -22,6 +22,9 @@ document.getElementById('upload-btn').addEventListener('click', function() {
             populateTable('name-table', filteredNames);
         }
     });
+
+    // Show the reminder text
+    document.getElementById('reminder-text').style.display = 'block';
 });
 
 
@@ -48,10 +51,11 @@ document.getElementById('name-table').addEventListener('click', function(e) {
             "Done": function() {
                 // Get the selected station
                 var selectedStation = $('#station-select option:selected').val();
-                
+                var photographerName = selectedPhotographers[selectedStation-1];
                 // Add the station to the nameRow object
-                nameRow.station = selectedStation;
-              
+                // nameRow.station = selectedStation;
+                nameRow.station = selectedStation + ' (Photographer ' + photographerNumber + ')';
+
                 // Get the camera input element
                 var cameraInput = document.getElementById('camera-input');
                 
