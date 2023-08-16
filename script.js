@@ -51,10 +51,10 @@ document.getElementById('name-table').addEventListener('click', function(e) {
             "Done": function() {
                 // Get the selected station
                 var selectedStation = $('#station-select option:selected').val();
-                // var photographerName = selectedPhotographers[selectedStation-1];
+                var photographerName = selectedPhotographers[selectedStation-1];
                 // Add the station to the nameRow object
                 // nameRow.station = selectedStation;
-                nameRow.station = selectedStation + ' (Photographer  ';
+                nameRow.station = selectedStation + ' (Photographer ' + photographerName + ')';
 
                 // Get the camera input element
                 var cameraInput = document.getElementById('camera-input');
