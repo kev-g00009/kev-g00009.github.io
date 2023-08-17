@@ -21,6 +21,9 @@ document.getElementById('upload-btn').addEventListener('click', function() {
             names = [...allNames]; 
             filteredNames = [...allNames];  // Copy of the allNames array for search functionality
             populateTable('name-table', filteredNames);
+
+            // Hide the upload button after successful upload
+            document.getElementById('upload-btn').style.display = 'none';
         }
     });
 
