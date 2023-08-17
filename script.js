@@ -52,21 +52,15 @@ document.getElementById('name-table').addEventListener('click', function(e) {
             "Done": function() {
                 // Get the selected station
                 var selectedStation = $('#station-select option:selected').val();
-                console.log("Selected Station:", selectedStation); // Debugging line
 
                 // Find the index of the selected station in the stations array
                 var stationIndex = stations.indexOf(selectedStation);
-                console.log("Station Index:", stationIndex); // Debugging line
 
                 // Get the corresponding photographer's name using the station index
                 var photographerName = selectedPhotographers[stationIndex];
-                console.log("Photographer Name:", photographerName); // Debugging line
-
-                console.log("Stations Array:", stations);
-                console.log("Selected Photographers Array:", selectedPhotographers);
 
                 // Construct the station string with the photographer's name
-                selectedStation = selectedStation + ' (Photographer ' + photographerName + ')';
+                selectedStation = selectedStation + ' (' + photographerName + ')';
 
                 // Add the station to the nameRow object
                 nameRow.station = selectedStation;
@@ -160,6 +154,10 @@ document.getElementById('name-table').addEventListener('click', function(e) {
 
 
 document.getElementById('download-btn').addEventListener('click', function() {
+  
+  var filename = window.prompt("Please enter the filename:", "ordered_names.csv");
+
+  if (filename) {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
         return [currentAssistantNumber + rowIndex].concat(Object.values(row)).join(',');
@@ -168,9 +166,11 @@ document.getElementById('download-btn').addEventListener('click', function() {
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'ordered-names.csv';
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+  }
+    
 });
 
 document.getElementById('search-bar').addEventListener('input', function() {
