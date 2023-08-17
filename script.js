@@ -103,12 +103,21 @@ document.getElementById('name-table').addEventListener('click', function(e) {
           }
         });
       
+        // // Populate the select options with the stations
+        // var select = $('#station-select');
+        // select.empty();
+        // stations.forEach(function(station) {
+        //   select.append($('<option></option>').val(station).html(station));
+        // });
+        
         // Populate the select options with the stations
         var select = $('#station-select');
         select.empty();
-        stations.forEach(function(station) {
-          select.append($('<option></option>').val(station).html(station));
-        });
+        stations.forEach(function(station, index) {
+        var photographerName = selectedPhotographers[index]; // Get the corresponding photographer's name
+        var optionText = station + ' (Photographer ' + photographerName + ')';
+        select.append($('<option></option>').val(station).html(optionText));
+});
       
         stationDialog.dialog("open");
       });
