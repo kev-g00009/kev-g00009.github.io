@@ -4,6 +4,7 @@ var orderedNames = [];
 var ordering = false;
 var filteredNames;
 var stations = [];  // Array to store the list of stations
+var selectedPhotographers = [];
 
 
 
@@ -228,7 +229,7 @@ $( function() {
     assistantNames = ['Assistant 1', 'Assistant 2', 'Assistant 3', 'Assistant 4', 'Assistant 5', 'Assistant 6', 'Assistant 7', 'Assistant 8', 'Assistant 9'],
     photographerNames = ['Photographer 1', 'Photographer 2', 'Photographer 3', 'Photographer 4', 'Photographer 5', 'Photographer 6', 'Photographer 7', 'Photographer 8', 'Photographer 9'],
     selectedAssistant = "",
-    selectedPhotographers = [],
+    
     stationNumber = 1;
 
     function addStation() {
