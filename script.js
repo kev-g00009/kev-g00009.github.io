@@ -113,14 +113,9 @@ document.getElementById('name-table').addEventListener('click', function(e) {
         // Populate the select options with the stations
         var select = $('#station-select');
         select.empty();
-
-        console.log("Stations:", stations); // Debugging log
-        console.log("Selected Photographers:", selectedPhotographers); // Debugging log
-
         stations.forEach(function(station, index) {
             var photographerName = selectedPhotographers[index]; // Get the corresponding photographer's name
-            var optionText = station + ' (Photographer ' + photographerName + ')';
-            console.log("Option Text:", optionText); // Debugging log
+            var optionText = station + ' (' + photographerName + ')';
 
             select.append($('<option></option>').val(station).html(optionText));
         });
