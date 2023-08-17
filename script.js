@@ -52,7 +52,8 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 // Get the selected station
                 var selectedStation = $('#station-select option:selected').val();
 
-                var stationNumber = selectedStation.replace('Station ', '');
+                // Extract the station number and convert it to an integer
+                var stationNumber = parseInt(selectedStation.replace('Station ', ''), 10);
 
                 // Get the corresponding photographer's name
                 var photographerName = selectedPhotographers[stationNumber - 1];
