@@ -52,14 +52,14 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 // Get the selected station
                 var selectedStation = $('#station-select option:selected').val();
 
-                // Extract the station number and convert it to an integer
-                var stationNumber = parseInt(selectedStation.replace('Station ', ''), 10);
+                // Find the index of the selected station in the stations array
+                var stationIndex = stations.indexOf(selectedStation);
 
-                // Get the corresponding photographer's name
-                var photographerName = selectedPhotographers[stationNumber - 1];
+                // Get the corresponding photographer's name using the station index
+                var photographerName = selectedPhotographers[stationIndex];
 
-                // Include the photographer's name with the station number
-                selectedStation = 'Station ' + stationNumber + ' (Photographer ' + photographerName + ')';
+                // Construct the station string with the photographer's name
+                selectedStation = selectedStation + ' (Photographer ' + photographerName + ')';
 
                 // Add the station to the nameRow object
                 nameRow.station = selectedStation;
