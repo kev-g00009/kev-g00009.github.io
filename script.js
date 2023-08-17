@@ -32,6 +32,12 @@ document.getElementById('upload-btn').addEventListener('click', function() {
 });
 
 
+document.getElementById('file-upload').addEventListener('change', function() {
+  // Show the upload button when a new file is selected
+  document.getElementById('upload-btn').style.display = 'block'; // or 'inline', 'inline-block', etc., depending on your desired appearance
+});
+
+
 
 document.getElementById('go-btn').addEventListener('click', function() {
     ordering = !ordering;
