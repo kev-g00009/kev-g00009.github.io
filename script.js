@@ -17,10 +17,11 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     Papa.parse(file, {
         header: true,
         complete: function(results) {
-            allNames = results.data.map((row, index) => ({...row, originalIndex: index}));
+            var headerRow = results.data[0]; // Extracting the first row as the header
+            allNames = results.data.slice(1).map((row, index) => ({...row, originalIndex: index})); // Skipping the header row
             names = [...allNames]; 
             filteredNames = [...allNames];  // Copy of the allNames array for search functionality
-            populateTable('name-table', filteredNames);
+            populateTable('name-table', filteredNames, false, headerRow); // Passing the header row to the populateTable function
 
             // Hide the upload button after successful upload
             document.getElementById('upload-btn').style.display = 'none';
@@ -205,12 +206,24 @@ window.addEventListener('beforeunload', function (e) {
     e.returnValue = '';  // Chrome requires returnValue to be set
 });
 
-function populateTable(tableId, namesArray, includeStation = false) {
-    var table = document.getElementById(tableId);
-    while (table.firstChild) {
-        table.firstChild.remove();
-    }
-    for (var i = 0; i < namesArray.length; i++) {
+function populateTable(tableId, namesArray, includeStation = false, headerRow = null) {
+  var table = document.getElementById(tableId);
+  while (table.firstChild) {
+      table.firstChild.remove();
+  }
+
+  // If headerRow is provided, add it as a non-clickable row
+  if (headerRow) {
+      var header = table.createTHead();
+      var headerRowElement = header.insertRow(0);
+      headerRowElement.className = 'header-row'; // Adding the class to the header row
+      for (var key in headerRow) {
+          var cell = headerRowElement.insertCell(-1);
+          cell.innerHTML = headerRow[key];
+      }
+  }
+
+  for (var i = 0; i < namesArray.length; i++) {
       var row = document.createElement('tr');
       row.dataset.row = JSON.stringify(namesArray[i]);
       var cell = document.createElement('td');
