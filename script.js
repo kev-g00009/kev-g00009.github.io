@@ -15,24 +15,18 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     var file = fileInput.files[0];
     
     Papa.parse(file, {
-      header: false, // Set header to false to treat the first row as data
+      header: false,
       complete: function(results) {
           // Store the first row separately
           var headerRow = results.data[0];
-          // Map the rest of the data to the desired format, starting from the second row
-          allNames = results.data.slice(1).map((row, index) => {
-              return {
-                  name: row[0], // Assuming the name is in the first column
-                  // Add other properties as needed
-                  originalIndex: index
-              };
-          });
+          // Store the rest of the data, starting from the second row
+          allNames = results.data.slice(1);
           names = [...allNames];
           filteredNames = [...allNames];
           populateTable('name-table', filteredNames, false, headerRow);
           // ... rest of the code
       }
-  });  
+  });
 
     // Show the reminder text
     document.getElementById('reminder-text').style.display = 'block';
@@ -230,25 +224,18 @@ function populateTable(tableId, namesArray, includeStation = false, headerRow = 
 
   for (var i = 0; i < namesArray.length; i++) {
       var row = document.createElement('tr');
-      row.dataset.row = JSON.stringify(namesArray[i]);
+      var currentRowData = namesArray[i]; // Get the data for the current row
+      row.dataset.row = JSON.stringify(currentRowData);
       var cell = document.createElement('td');
       if (tableId === 'ordered-table') {  // Add the assistant number if the table is 'ordered-table'
           cell.textContent = currentAssistantNumber + (i + 1).toString().padStart(3, '0') + '. ';
       }
       row.appendChild(cell);
-      for (var key in namesArray[i]) {
-          if (key !== 'originalIndex' && (includeStation || key !== 'station')) {
-              cell = document.createElement('td');
-              if (key === 'image' && namesArray[i][key]) {
-                  var img = document.createElement('img');
-                  img.src = namesArray[i][key];
-                  img.height = 100;
-                  cell.appendChild(img);
-              } else {
-                  cell.textContent = namesArray[i][key];
-              }
-              row.appendChild(cell);
-          }
+      // Iterate through the data for the current row
+      for (var j = 0; j < currentRowData.length; j++) {
+          cell = document.createElement('td');
+          cell.textContent = currentRowData[j];
+          row.appendChild(cell);
       }
       table.appendChild(row);
   }
