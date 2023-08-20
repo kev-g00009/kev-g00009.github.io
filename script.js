@@ -5,6 +5,7 @@ var ordering = false;
 var filteredNames;
 var stations = [];  // Array to store the list of stations
 var selectedPhotographers = [];
+var headerRow;  // New variable to store the header row
 
 
 
@@ -15,18 +16,18 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     var file = fileInput.files[0];
     
     Papa.parse(file, {
-      header: false,
-      complete: function(results) {
-          // Store the first row separately
-          var headerRow = results.data[0];
-          // Store the rest of the data, starting from the second row
-          allNames = results.data.slice(1);
-          names = [...allNames];
-          filteredNames = [...allNames];
-          populateTable('name-table', filteredNames, false, headerRow);
-          // ... rest of the code
-      }
-  });
+        header: true,
+        complete: function(results) {
+            headerRow = results.meta.fields;  // Store the header row
+            allNames = results.data.map((row, index) => ({...row, originalIndex: index}));
+            names = [...allNames]; 
+            filteredNames = [...allNames];  // Copy of the allNames array for search functionality
+            populateTable('name-table', filteredNames);
+
+            // Hide the upload button after successful upload
+            document.getElementById('upload-btn').style.display = 'none';
+        }
+    });
 
     // Show the reminder text
     document.getElementById('reminder-text').style.display = 'block';
@@ -206,23 +207,25 @@ window.addEventListener('beforeunload', function (e) {
     e.returnValue = '';  // Chrome requires returnValue to be set
 });
 
-function populateTable(tableId, namesArray, includeStation = false, headerRow = null) {
-  var table = document.getElementById(tableId);
-  while (table.firstChild) {
-      table.firstChild.remove();
-  }
+function populateTable(tableId, namesArray, includeStation = false) {
+    var table = document.getElementById(tableId);
+    while (table.firstChild) {
+        table.firstChild.remove();
+    }
 
-  // If headerRow is provided and the table is 'name-table', add it as a non-clickable row
-  if (headerRow && tableId === 'name-table') {
-      var row = table.insertRow(0);
-      row.className = 'header-row';
+    // Add the header row if it's the 'name-table'
+    if (tableId === 'name-table') {
+      var header = document.createElement('tr');
+      header.classList.add('header-row');  // Add a class for styling
       headerRow.forEach(function(cellValue) {
-          var cell = row.insertCell(-1);
+          var cell = document.createElement('th');  // Use 'th' for header cells
           cell.textContent = cellValue;
+          header.appendChild(cell);
       });
+      table.appendChild(header);
   }
-
-  for (var i = 0; i < namesArray.length; i++) {
+  
+    for (var i = 0; i < namesArray.length; i++) {
       var row = document.createElement('tr');
       row.dataset.row = JSON.stringify(namesArray[i]);
       var cell = document.createElement('td');
