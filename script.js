@@ -208,9 +208,9 @@ window.addEventListener('beforeunload', function (e) {
 
 function populateTable(tableId, namesArray, includeStation = false, headerRow = null) {
   var table = document.getElementById(tableId);
-  while (table.firstChild) {
-      table.firstChild.remove();
-  }
+  // while (table.firstChild) {
+  //     table.firstChild.remove();
+  // }
 
   // If headerRow is provided, add it as a non-clickable row
   if (headerRow) {
