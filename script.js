@@ -212,19 +212,21 @@ function populateTable(tableId, namesArray, includeStation = false) {
     while (table.firstChild) {
         table.firstChild.remove();
     }
-
+    
     // Add the header row if it's the 'name-table'
     if (tableId === 'name-table') {
-      var header = document.createElement('tr');
-      header.classList.add('header-row');  // Add a class for styling
-      headerRow.forEach(function(cellValue) {
-          var cell = document.createElement('th');  // Use 'th' for header cells
-          cell.textContent = cellValue;
-          header.appendChild(cell);
-      });
-      table.appendChild(header);
-  }
-  
+        var header = document.createElement('tr');
+        header.classList.add('header-row');  // Add a class for styling
+        var emptyCell = document.createElement('th'); // Create an empty cell
+        header.appendChild(emptyCell);  // Add the empty cell to the header row
+        headerRow.forEach(function(cellValue) {
+            var cell = document.createElement('th');  // Use 'th' for header cells
+            cell.textContent = cellValue;
+            header.appendChild(cell);
+        });
+        table.appendChild(header);
+    }
+
     for (var i = 0; i < namesArray.length; i++) {
       var row = document.createElement('tr');
       row.dataset.row = JSON.stringify(namesArray[i]);
