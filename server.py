@@ -12,3 +12,25 @@
 
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=8000)  # the server will listen for requests on port 8000
+
+from flask import Flask, request, send_from_directory
+import os
+
+app = Flask(__name__)
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    file = request.files['file']
+    filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(filename)
+    return {"url": f"http://localhost:5000/{filename}"}
+
+@app.route('/uploads/<filename>')
+def serve_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+if __name__ == '__main__':
+    app.run(debug=True)

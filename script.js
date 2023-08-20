@@ -82,25 +82,48 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 // Trigger the camera input when the Done button is clicked
                 cameraInput.click();
               
+                // // When a picture is taken
+                // cameraInput.onchange = function(event) {
+                //   // Get the picture file
+                //   var file = event.target.files[0];
+                //   var reader = new FileReader();
+              
+                //   reader.onloadend = function() {
+                //     // Get the data URL of the picture
+                //     var dataUrl = reader.result;
+              
+                //     // Now you can store the dataUrl in your nameRow object and update your table
+                //     nameRow.image = dataUrl;
+                //     populateTable('ordered-table', orderedNames, true);
+                //   }
+              
+                //   if (file) {
+                //     // Read the picture file as a data URL
+                //     reader.readAsDataURL(file);
+                //   }
+                // };
+
                 // When a picture is taken
                 cameraInput.onchange = function(event) {
                   // Get the picture file
                   var file = event.target.files[0];
-                  var reader = new FileReader();
-              
-                  reader.onloadend = function() {
-                    // Get the data URL of the picture
-                    var dataUrl = reader.result;
-              
-                    // Now you can store the dataUrl in your nameRow object and update your table
-                    nameRow.image = dataUrl;
-                    populateTable('ordered-table', orderedNames, true);
-                  }
-              
-                  if (file) {
-                    // Read the picture file as a data URL
-                    reader.readAsDataURL(file);
-                  }
+                  var formData = new FormData();
+                  formData.append('file', file);
+
+                  // Send the file to the server
+                  fetch('/upload', {
+                      method: 'POST',
+                      body: formData
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      // Get the URL from the server response
+                      var imageUrl = data.url;
+
+                      // Now you can store the imageUrl in your nameRow object and update your table
+                      nameRow.image = imageUrl;
+                      populateTable('ordered-table', orderedNames, true);
+                  });
                 };
               
                 names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
