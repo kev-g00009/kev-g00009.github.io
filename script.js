@@ -224,18 +224,25 @@ function populateTable(tableId, namesArray, includeStation = false, headerRow = 
 
   for (var i = 0; i < namesArray.length; i++) {
       var row = document.createElement('tr');
-      var currentRowData = namesArray[i]; // Get the data for the current row
-      row.dataset.row = JSON.stringify(currentRowData);
+      row.dataset.row = JSON.stringify(namesArray[i]);
       var cell = document.createElement('td');
       if (tableId === 'ordered-table') {  // Add the assistant number if the table is 'ordered-table'
           cell.textContent = currentAssistantNumber + (i + 1).toString().padStart(3, '0') + '. ';
       }
       row.appendChild(cell);
-      // Iterate through the data for the current row
-      for (var j = 0; j < currentRowData.length; j++) {
-          cell = document.createElement('td');
-          cell.textContent = currentRowData[j];
-          row.appendChild(cell);
+      for (var key in namesArray[i]) {
+          if (key !== 'originalIndex' && (includeStation || key !== 'station')) {
+              cell = document.createElement('td');
+              if (key === 'image' && namesArray[i][key]) {
+                  var img = document.createElement('img');
+                  img.src = namesArray[i][key];
+                  img.height = 100;
+                  cell.appendChild(img);
+              } else {
+                  cell.textContent = namesArray[i][key];
+              }
+              row.appendChild(cell);
+          }
       }
       table.appendChild(row);
   }
