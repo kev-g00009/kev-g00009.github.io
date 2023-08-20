@@ -15,10 +15,11 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     var file = fileInput.files[0];
     
     Papa.parse(file, {
-        header: true,
+        header: false,
+        dynamicTyping: true,
         complete: function(results) {
-            var headerRow = results.data[0]; // Extracting the first row as the header
-            allNames = results.data.slice(1).map((row, index) => ({...row, originalIndex: index})); // Skipping the header row
+            allNames = results.data.slice(1).map((row, index) => ({name: row[0], originalIndex: index})); // Excluding the first row
+            headerRow = results.data[0]; // Extracting the first row as the header
             names = [...allNames]; 
             filteredNames = [...allNames];  // Copy of the allNames array for search functionality
             populateTable('name-table', filteredNames, false, headerRow); // Passing the header row to the populateTable function
@@ -208,19 +209,18 @@ window.addEventListener('beforeunload', function (e) {
 
 function populateTable(tableId, namesArray, includeStation = false, headerRow = null) {
   var table = document.getElementById(tableId);
-  // while (table.firstChild) {
-  //     table.firstChild.remove();
-  // }
+  while (table.firstChild) {
+      table.firstChild.remove();
+  }
 
-  // If headerRow is provided, add it as a non-clickable row
-  if (headerRow) {
-      var header = table.createTHead();
-      var headerRowElement = header.insertRow(0);
-      headerRowElement.className = 'header-row'; // Adding the class to the header row
-      for (var key in headerRow) {
-          var cell = headerRowElement.insertCell(-1);
-          cell.innerHTML = headerRow[key];
-      }
+  // If headerRow is provided and the table is 'name-table', add it as a non-clickable row
+  if (headerRow && tableId === 'name-table') {
+      var row = table.insertRow(0);
+      row.className = 'header-row'; // Adding the class to the header row
+      headerRow.forEach(function(cellValue) {
+          var cell = row.insertCell(-1);
+          cell.innerHTML = cellValue;
+      });
   }
 
   for (var i = 0; i < namesArray.length; i++) {
