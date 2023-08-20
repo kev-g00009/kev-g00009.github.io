@@ -205,7 +205,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
         return [currentAssistantNumber + rowIndex].concat(Object.values(row)).join(',');
-    }).join('\r\n');  
+    }).join('\\r\\n');  
     var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
