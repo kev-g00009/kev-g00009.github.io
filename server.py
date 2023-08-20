@@ -34,5 +34,10 @@ def upload_file():
 def serve_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/')
+def index():
+    return 'Server is running!'
+
+
 if __name__ == '__main__':
     app.run(debug=True)
