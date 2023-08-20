@@ -111,8 +111,8 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                   formData.append('file', file);
 
                   // Send the file to the server
-                  fetch('/upload', {
-                      method: 'POST',
+                  fetch('http://localhost:5000/upload', {
+                    method: 'POST',
                       body: formData
                   })
                   .then(response => response.json())
