@@ -15,19 +15,24 @@ document.getElementById('upload-btn').addEventListener('click', function() {
     var file = fileInput.files[0];
     
     Papa.parse(file, {
-        header: false,
-        dynamicTyping: true,
-        complete: function(results) {
-            allNames = results.data.slice(1).map((row, index) => ({name: row[0], originalIndex: index})); // Excluding the first row
-            headerRow = results.data[0]; // Extracting the first row as the header
-            names = [...allNames]; 
-            filteredNames = [...allNames];  // Copy of the allNames array for search functionality
-            populateTable('name-table', filteredNames, false, headerRow); // Passing the header row to the populateTable function
-
-            // Hide the upload button after successful upload
-            document.getElementById('upload-btn').style.display = 'none';
-        }
-    });
+      header: false, // Set header to false to treat the first row as data
+      complete: function(results) {
+          // Store the first row separately
+          var headerRow = results.data[0];
+          // Map the rest of the data to the desired format, starting from the second row
+          allNames = results.data.slice(1).map((row, index) => {
+              return {
+                  name: row[0], // Assuming the name is in the first column
+                  // Add other properties as needed
+                  originalIndex: index
+              };
+          });
+          names = [...allNames];
+          filteredNames = [...allNames];
+          populateTable('name-table', filteredNames, false, headerRow);
+          // ... rest of the code
+      }
+  });  
 
     // Show the reminder text
     document.getElementById('reminder-text').style.display = 'block';
@@ -216,10 +221,10 @@ function populateTable(tableId, namesArray, includeStation = false, headerRow = 
   // If headerRow is provided and the table is 'name-table', add it as a non-clickable row
   if (headerRow && tableId === 'name-table') {
       var row = table.insertRow(0);
-      row.className = 'header-row'; // Adding the class to the header row
+      row.className = 'header-row';
       headerRow.forEach(function(cellValue) {
           var cell = row.insertCell(-1);
-          cell.innerHTML = cellValue;
+          cell.textContent = cellValue;
       });
   }
 
