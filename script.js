@@ -82,48 +82,49 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                 // Trigger the camera input when the Done button is clicked
                 cameraInput.click();
               
-                // // When a picture is taken
-                // cameraInput.onchange = function(event) {
-                //   // Get the picture file
-                //   var file = event.target.files[0];
-                //   var reader = new FileReader();
-              
-                //   reader.onloadend = function() {
-                //     // Get the data URL of the picture
-                //     var dataUrl = reader.result;
-              
-                //     // Now you can store the dataUrl in your nameRow object and update your table
-                //     nameRow.image = dataUrl;
-                //     populateTable('ordered-table', orderedNames, true);
-                //   }
-              
-                //   if (file) {
-                //     // Read the picture file as a data URL
-                //     reader.readAsDataURL(file);
-                //   }
-                // };
-
                 // When a picture is taken
                 cameraInput.onchange = function(event) {
                   // Get the picture file
                   var file = event.target.files[0];
-                  var formData = new FormData();
-                  formData.append('file', file);
+                  var reader = new FileReader();
+              
+                  reader.onloadend = function() {
+                // Convert the data URL to a Blob so it can be uploaded
+                var binary = atob(dataUrl.split(',')[1]);
+                var array = [];
+                for (var i = 0; i < binary.length; i++) {
+                    array.push(binary.charCodeAt(i));
+                }
+                var blob = new Blob([new Uint8Array(array)], {type: 'image/png'});
 
-                  // Send the file to the server
-                  fetch('http://localhost:5000/upload', {
+                // Create a FormData object and append the blob
+                var formData = new FormData();
+                formData.append('file', blob);
+
+                // Send the image to the server
+                fetch('/upload', {
                     method: 'POST',
-                      body: formData
-                  })
-                  .then(response => response.json())
-                  .then(data => {
-                      // Get the URL from the server response
-                      var imageUrl = data.url;
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Store the returned URL in the nameRow object
+                    nameRow.image = data.url;
+                    populateTable('ordered-table', orderedNames, true);
+                });
 
-                      // Now you can store the imageUrl in your nameRow object and update your table
-                      nameRow.image = imageUrl;
-                      populateTable('ordered-table', orderedNames, true);
-                  });
+                    // Get the data URL of the picture
+                    var dataUrl = reader.result;
+              
+                    // Now you can store the dataUrl in your nameRow object and update your table
+                    nameRow.image = dataUrl;
+                    populateTable('ordered-table', orderedNames, true);
+                  }
+              
+                  if (file) {
+                    // Read the picture file as a data URL
+                    reader.readAsDataURL(file);
+                  }
                 };
               
                 names.splice(names.findIndex(n => n.Name === nameRow.Name && n.originalIndex === nameRow.originalIndex), 1);
@@ -198,6 +199,29 @@ document.getElementById('name-table').addEventListener('click', function(e) {
 
 
 document.getElementById('download-btn').addEventListener('click', function() {
+        var csvContent = 'data:text/csv;charset=utf-8,';
+        var rows = [];
+        // Add header
+        rows.push(headerRow.join(','));
+        orderedNames.forEach(function(nameRow) {
+            var row = [];
+            for (var key in nameRow) {
+                if (key !== 'image') {
+                    row.push('"' + nameRow[key] + '"');
+                } else {
+                    row.push('"' + window.location.origin + nameRow[key] + '"');
+                }
+            }
+            rows.push(row.join(','));
+        });
+        csvContent += rows.join('\n');
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'ordered_names.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
   
   var filename = window.prompt("Please enter the filename:", "ordered_names.csv");
 
@@ -205,7 +229,7 @@ document.getElementById('download-btn').addEventListener('click', function() {
     var csv = orderedNames.map((row, i) => {
         var rowIndex = (i + 1).toString().padStart(3, '0');
         return [currentAssistantNumber + rowIndex].concat(Object.values(row)).join(',');
-    }).join('\\r\\n');  
+    }).join('\r\n');  
     var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
