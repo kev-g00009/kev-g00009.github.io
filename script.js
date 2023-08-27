@@ -107,7 +107,7 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                     xhr.send(formData);
 
                     // Now you can store the dataUrl in your nameRow object and update your table
-                    nameRow.image = dataUrl;
+                    // nameRow.image = dataUrl;
                     populateTable('ordered-table', orderedNames, true);
                   }
               
