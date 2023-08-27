@@ -89,33 +89,23 @@ document.getElementById('name-table').addEventListener('click', function(e) {
                   var reader = new FileReader();
               
                   reader.onloadend = function() {
-                // Convert the data URL to a Blob so it can be uploaded
-                var binary = atob(dataUrl.split(',')[1]);
-                var array = [];
-                for (var i = 0; i < binary.length; i++) {
-                    array.push(binary.charCodeAt(i));
-                }
-                var blob = new Blob([new Uint8Array(array)], {type: 'image/png'});
-
-                // Create a FormData object and append the blob
-                var formData = new FormData();
-                formData.append('file', blob);
-
-                // Send the image to the server
-                fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Store the returned URL in the nameRow object
-                    nameRow.image = data.url;
-                    populateTable('ordered-table', orderedNames, true);
-                });
-
                     // Get the data URL of the picture
                     var dataUrl = reader.result;
               
+                    // Now we upload the dataUrl to the Flask server and get the URL
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/upload', true);
+                    var formData = new FormData();
+                    formData.append("image", dataUrlToBlob(dataUrl));
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            var jsonResponse = JSON.parse(xhr.responseText);
+                            nameRow.image = jsonResponse.url;
+                            populateTable('ordered-table', orderedNames, true);
+                        }
+                    };
+                    xhr.send(formData);
+
                     // Now you can store the dataUrl in your nameRow object and update your table
                     nameRow.image = dataUrl;
                     populateTable('ordered-table', orderedNames, true);
@@ -199,29 +189,6 @@ document.getElementById('name-table').addEventListener('click', function(e) {
 
 
 document.getElementById('download-btn').addEventListener('click', function() {
-        var csvContent = 'data:text/csv;charset=utf-8,';
-        var rows = [];
-        // Add header
-        rows.push(headerRow.join(','));
-        orderedNames.forEach(function(nameRow) {
-            var row = [];
-            for (var key in nameRow) {
-                if (key !== 'image') {
-                    row.push('"' + nameRow[key] + '"');
-                } else {
-                    row.push('"' + window.location.origin + nameRow[key] + '"');
-                }
-            }
-            rows.push(row.join(','));
-        });
-        csvContent += rows.join('\n');
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'ordered_names.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
   
   var filename = window.prompt("Please enter the filename:", "ordered_names.csv");
 
@@ -369,3 +336,12 @@ $( function() {
 
     $( "#assistant-dialog-form" ).dialog( "open" );
 });
+
+function dataUrlToBlob(dataUrl) {
+  var arr = dataUrl.split(','), mime = arr[0].match(/:(.*?);/)[1];
+  var bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while(n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], {type: mime});
+}
